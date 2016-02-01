@@ -1,0 +1,11 @@
+services:
+    rmcgirr83.sfpo.listener:
+        class: rmcgirr83\sfpo\event\listener
+        arguments:
+            - @content.visibility
+            - @dbal.conn
+            - @request
+            - @template
+            - @user
+        tags:
+            - { name: event.listener }
