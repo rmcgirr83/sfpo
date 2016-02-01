@@ -145,7 +145,7 @@ class listener implements EventSubscriberInterface
 			$topic_replies = $this->content_visibility->get_count('topic_posts', $topic_data, $event['forum_id']) - 1;
 			$this->template->assign_vars(array(
 				'S_SFPO'	=> true,
-				'SFPO_MESSAGE'	=> $this->user->lang('SFPO_MSG_REPLY', $topic_replies),
+				'SFPO_MESSAGE'	=> $topic_replies ? $this->user->lang('SFPO_MSG_REPLY', $topic_replies) : '',
 			));
 		}
 
