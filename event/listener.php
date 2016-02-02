@@ -139,7 +139,7 @@ class listener implements EventSubscriberInterface
 		if ($s_sfpo)
 		{
 			$this->user->add_lang_ext('rmcgirr83/sfpo', 'common');
-			$post_list = (int) $topic_data['topic_first_post_id'];
+			$post_list = array((int) $topic_data['topic_first_post_id']);
 			$sql_ary['WHERE'] = $this->db->sql_in_set('p.post_id', $post_list) . ' AND u.user_id = p.poster_id';
 
 			$topic_replies = $this->content_visibility->get_count('topic_posts', $topic_data, $event['forum_id']) - 1;
