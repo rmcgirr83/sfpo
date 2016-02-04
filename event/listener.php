@@ -34,18 +34,28 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var string phpBB root path */
+	protected $phpbb_root_path;
+
+	/** @var string phpEx */
+	protected $php_ext;
+
 	public function __construct(
 		\phpbb\content_visibility $content_visibility,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\request\request $request,
 		\phpbb\template\template $template,
-		\phpbb\user $user)
+		\phpbb\user $user,
+		$phpbb_root_path,
+		$php_ext)
 	{
 		$this->content_visibility = $content_visibility;
 		$this->db = $db;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
+		$this->root_path = $phpbb_root_path;
+		$this->php_ext = $php_ext;
 	}
 
 	/**
@@ -143,9 +153,12 @@ class listener implements EventSubscriberInterface
 			$sql_ary['WHERE'] = $this->db->sql_in_set('p.post_id', $post_list) . ' AND u.user_id = p.poster_id';
 
 			$topic_replies = $this->content_visibility->get_count('topic_posts', $topic_data, $event['forum_id']) - 1;
+			$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
+
 			$this->template->assign_vars(array(
 				'S_SFPO'	=> true,
-				'SFPO_MESSAGE'	=> $topic_replies ? $this->user->lang('SFPO_MSG_REPLY', $topic_replies) : '',
+				'SFPO_MESSAGE'		=> $topic_replies ? $this->user->lang('SFPO_MSG_REPLY', $topic_replies) : '',
+				'U_SFPO_LOGIN'		=> append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect),
 			));
 		}
 
