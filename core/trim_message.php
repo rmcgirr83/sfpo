@@ -43,7 +43,7 @@ class trim_message
 	* @param int	$length			length the code should be trimmed to
 	* @param string $user_message	user lang var appended to the message
 	* @param string	$append_str		text that is appended after trimmed message
-	* @param int	$tolerance		tolerance for the message: we don't trim it	
+	* @param int	$tolerance		tolerance for the message: we don't trim it
 	*								if it is shorter than length + tolerance.
 	*/
 	public function __construct($message, $bbcode_uid, $length, $user_message, $append_str = '...', $tolerance = 25)
