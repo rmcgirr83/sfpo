@@ -13,6 +13,7 @@ namespace rmcgirr83\sfpo\event;
 * @ignore
 */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use rmcgirr83\sfpo\core\trim_message;
 
 /**
 * Event listener
@@ -56,6 +57,7 @@ class listener implements EventSubscriberInterface
 		$this->user = $user;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
+		$this->user->add_lang_ext('rmcgirr83/sfpo', 'common');
 	}
 
 	/**
@@ -75,6 +77,7 @@ class listener implements EventSubscriberInterface
 			// Viewing a topic
 			'core.viewtopic_assign_template_vars_before'	=>	'viewtopic_assign_template_vars_before',
 			'core.viewtopic_get_post_data'			=> 'viewtopic_get_post_data',
+			'core.viewtopic_modify_post_row'		=> 'viewtopic_modify_post_row',
 		);
 	}
 
@@ -83,6 +86,7 @@ class listener implements EventSubscriberInterface
 	{
 		$sfpo_array = $event['forum_data'];
 		$sfpo_array['sfpo_guest_enable'] = $this->request->variable('sfpo_guest_enable', 0);
+		$sfpo_array['sfpo_characters'] = $this->request->variable('sfpo_characters', 0);
 		$event['forum_data'] = $sfpo_array;
 	}
 
@@ -93,6 +97,7 @@ class listener implements EventSubscriberInterface
 		{
 			$sfpo_array = $event['forum_data'];
 			$sfpo_array['sfpo_guest_enable'] = (int) 0;
+			$sfpo_array['sfpo_characters'] = (int) 150;
 			$event['forum_data'] = $sfpo_array;
 		}
 	}
@@ -102,6 +107,7 @@ class listener implements EventSubscriberInterface
 	{
 		$sfpo_array = $event['template_data'];
 		$sfpo_array['S_SFPO_GUEST_ENABLE'] = $event['forum_data']['sfpo_guest_enable'];
+		$sfpo_array['S_SFPO_CHARACTERS'] = $event['forum_data']['sfpo_characters'];
 		$event['template_data'] = $sfpo_array;
 	}
 
@@ -148,7 +154,6 @@ class listener implements EventSubscriberInterface
 
 		if ($s_sfpo)
 		{
-			$this->user->add_lang_ext('rmcgirr83/sfpo', 'common');
 			$post_list = array((int) $topic_data['topic_first_post_id']);
 			$sql_ary['WHERE'] = $this->db->sql_in_set('p.post_id', $post_list) . ' AND u.user_id = p.poster_id';
 
@@ -164,4 +169,23 @@ class listener implements EventSubscriberInterface
 
 		$event['sql_ary'] = $sql_ary;
 	}
+
+	public function viewtopic_modify_post_row($event)
+	{
+		$topic_data = $event['topic_data'];
+		$post_data = $event['row'];
+		$message = $event['post_row'];
+		//$forum_id = $event['rowset']
+		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS));
+
+		if ($s_sfpo && !empty($topic_data['sfpo_characters']))
+		{
+			$trim = new trim_message($post_data['post_text'], $post_data['bbcode_uid'], $topic_data['sfpo_characters'], $this->user->lang('SFPO_APPEND_MESSAGE'));
+			$message['MESSAGE'] = $trim->message();
+
+			unset($trim);
+		}
+
+		$event['post_row'] = $message;
+	}	
 }
