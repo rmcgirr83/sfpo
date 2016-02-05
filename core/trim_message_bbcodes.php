@@ -139,7 +139,7 @@ class trim_message_bbcodes
 			* String: [/bbcode:uid]foobar
 			* Keys:    ^^^^^^^ = 0 ^^^^^^ = 1
 			*/
-			elseif ($num_parts == 2)
+			else if ($num_parts == 2)
 			{
 				/**
 				* We found an opening bracket in the quoted username which is not a bbcode
@@ -171,7 +171,6 @@ class trim_message_bbcodes
 					{
 						$this->is_sensitive = true;
 					}
-
 
 					$this->open_bbcode($bbcode_tag, $this->cur_position);
 					$this->cur_position += utf8_strlen($exploded_parts[0]) + $bbcode_end_length;
@@ -228,7 +227,7 @@ class trim_message_bbcodes
 			* String: [quote="[bbcode:uid]foo[/bbcode:uid]bar":uid]quotehere
 			* Keys:                           ^^^^^^^ = 0 ^^^^ = 1 ^^^^^^^^^ = 2
 			*/
-			elseif ($num_parts == 3)
+			else if ($num_parts == 3)
 			{
 				if (($exploded_parts[0][0] == '/') && (utf8_substr($exploded_parts[1], -6) == '&quot;') && $allow_close_quote)
 				{
