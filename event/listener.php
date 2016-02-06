@@ -174,18 +174,35 @@ class listener implements EventSubscriberInterface
 	{
 		$topic_data = $event['topic_data'];
 		$post_data = $event['row'];
-		$message = $event['post_row'];
-		//$forum_id = $event['rowset']
+		$post_template = $event['post_row'];
+
 		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS));
 
 		if ($s_sfpo && !empty($topic_data['sfpo_characters']))
 		{
+			if (!class_exists('bbcode'))
+			{
+				include($this->root_path . 'includes/bbcode.' . $this->php_ext);
+			}	
 			$trim = new trim_message($post_data['post_text'], $post_data['bbcode_uid'], $topic_data['sfpo_characters'], $this->user->lang('SFPO_APPEND_MESSAGE'));
-			$message['MESSAGE'] = $trim->message();
-
+			$message = $trim->message();
 			unset($trim);
+			$bbcode_bitfield = '';
+			$bbcode_bitfield = $bbcode_bitfield | base64_decode($post_data['bbcode_bitfield']);
+			if ($bbcode_bitfield !== '')
+			{
+				$bbcode = new \bbcode(base64_encode($bbcode_bitfield));
+			}
+			$message = censor_text($message);
+			if ($post_data['bbcode_bitfield'])
+			{
+				$bbcode->bbcode_second_pass($message, $post_data['bbcode_uid'], $post_data['bbcode_bitfield']);
+			}
+			$message = str_replace("\n", '<br />', $message);
+			$message = smiley_text($message);
+			$post_template['MESSAGE'] = $message;
 		}
 
-		$event['post_row'] = $message;
-	}
+		$event['post_row'] = $post_template;
+	}	
 }
