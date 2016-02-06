@@ -183,7 +183,7 @@ class listener implements EventSubscriberInterface
 			if (!class_exists('bbcode'))
 			{
 				include($this->root_path . 'includes/bbcode.' . $this->php_ext);
-			}	
+			}
 			$trim = new trim_message($post_data['post_text'], $post_data['bbcode_uid'], $topic_data['sfpo_characters'], $this->user->lang('SFPO_APPEND_MESSAGE'));
 			$message = $trim->message();
 			unset($trim);
@@ -204,5 +204,5 @@ class listener implements EventSubscriberInterface
 		}
 
 		$event['post_row'] = $post_template;
-	}	
+	}
 }
