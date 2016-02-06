@@ -57,7 +57,6 @@ class listener implements EventSubscriberInterface
 		$this->user = $user;
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
-		$this->user->add_lang_ext('rmcgirr83/sfpo', 'common');
 	}
 
 	/**
@@ -150,10 +149,12 @@ class listener implements EventSubscriberInterface
 	{
 		$topic_data = $event['topic_data'];
 		$sql_ary = $event['sql_ary'];
+		$post_list = $event['post_list'];
 		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS));
 
 		if ($s_sfpo)
 		{
+			$this->user->add_lang_ext('rmcgirr83/sfpo', 'common');
 			$post_list = array((int) $topic_data['topic_first_post_id']);
 			$sql_ary['WHERE'] = $this->db->sql_in_set('p.post_id', $post_list) . ' AND u.user_id = p.poster_id';
 
@@ -166,7 +167,7 @@ class listener implements EventSubscriberInterface
 				'U_SFPO_LOGIN'		=> append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect),
 			));
 		}
-
+		$event['post_list'] = $post_list;
 		$event['sql_ary'] = $sql_ary;
 	}
 
