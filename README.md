@@ -3,7 +3,7 @@ Show First Post Only to Guest
 
 phpBB 3.1 Show First Post Only to Guest extension
 
-Allows the admin to set an option that will only allow unregistered users/guests to view the first post of any topic. The rest of the posts in the topic will ask them to login or register.
+Allows the admin to set an option that will only allow unregistered users/guests to view the first post of any topic. The rest of the posts in the topic will ask them to login or register.  Options are set by the admin on a per forum basis.
 
 [![Build Status](https://travis-ci.org/RMcGirr83/phpBB-3.1-sfpo.svg?branch=master)](https://travis-ci.org/RMcGirr83/phpBB-3.1-sfpo)
 
