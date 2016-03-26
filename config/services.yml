@@ -2,12 +2,12 @@ services:
     rmcgirr83.sfpo.listener:
         class: rmcgirr83\sfpo\event\listener
         arguments:
-            - @content.visibility
-            - @dbal.conn
-            - @request
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
+            - '@content.visibility'
+            - '@dbal.conn'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         tags:
             - { name: event.listener }

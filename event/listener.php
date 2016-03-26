@@ -13,7 +13,6 @@ namespace rmcgirr83\sfpo\event;
 * @ignore
 */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use rmcgirr83\sfpo\core\trim_message;
 
 /**
 * Event listener
@@ -176,7 +175,6 @@ class listener implements EventSubscriberInterface
 		$topic_data = $event['topic_data'];
 		$post_data = $event['row'];
 		$post_template = $event['post_row'];
-
 		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS));
 
 		if ($s_sfpo && !empty($topic_data['sfpo_characters']))
@@ -185,11 +183,18 @@ class listener implements EventSubscriberInterface
 			{
 				include($this->root_path . 'includes/bbcode.' . $this->php_ext);
 			}
-			$trim = new trim_message($post_data['post_text'], $post_data['bbcode_uid'], $topic_data['sfpo_characters'], $this->user->lang('SFPO_APPEND_MESSAGE'));
-			$message = $trim->message();
-			unset($trim);
-			$bbcode_bitfield = '';
-			$bbcode_bitfield = $bbcode_bitfield | base64_decode($post_data['bbcode_bitfield']);
+
+			if (strlen($post_data['post_text']) > $topic_data['sfpo_characters'])
+			{
+				$message = str_replace(array("\n", "\r"), array('<br />', "\n"), $post_data['post_text']);
+				$message = $this->trim_message($message, $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
+			}
+			else
+			{
+				$message = str_replace("\n", '<br/> ', $row['post_text']);
+			}
+
+			$bbcode_bitfield = base64_decode($post_data['bbcode_bitfield']);
 			if ($bbcode_bitfield !== '')
 			{
 				$bbcode = new \bbcode(base64_encode($bbcode_bitfield));
@@ -199,11 +204,32 @@ class listener implements EventSubscriberInterface
 			{
 				$bbcode->bbcode_second_pass($message, $post_data['bbcode_uid'], $post_data['bbcode_bitfield']);
 			}
-			$message = str_replace("\n", '<br />', $message);
 			$message = smiley_text($message);
 			$post_template['MESSAGE'] = $message;
 		}
 
 		$event['post_row'] = $post_template;
+	}
+
+	/**
+	 * Trim message to specified length
+	 *
+	 * @param string	$message	Post text
+	 * @param string	$bbcode_uid	BBCode UID
+	 * @param int		$length		Length the text should have after shortening
+	 *
+	 * @return string trimmed messsage
+	 */
+	private function trim_message($message, $bbcode_uid, $length)
+	{
+		if (class_exists('\Nickvergessen\TrimMessage\TrimMessage'))
+		{
+			$trim = new \Nickvergessen\TrimMessage\TrimMessage($message, $bbcode_uid, $length);
+			$message = $trim->message();
+			$message = str_replace(' [...]', $this->user->lang('SFPO_APPEND_MESSAGE'), $message);
+			unset($trim);
+		}
+
+		return $message;
 	}
 }
