@@ -122,7 +122,7 @@ class listener implements EventSubscriberInterface
 		$post_id = $event['post_id'];
 		$start = $event['start'];
 		$total_posts = $event['total_posts'];
-		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS));
+		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && $this->user->data['user_id'] == ANONYMOUS);
 
 		if ($s_sfpo)
 		{
@@ -149,7 +149,7 @@ class listener implements EventSubscriberInterface
 		$topic_data = $event['topic_data'];
 		$sql_ary = $event['sql_ary'];
 		$post_list = $event['post_list'];
-		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS));
+		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && $this->user->data['user_id'] == ANONYMOUS);
 
 		if ($s_sfpo)
 		{
@@ -161,7 +161,7 @@ class listener implements EventSubscriberInterface
 			$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
 
 			$this->template->assign_vars(array(
-				'S_SFPO'	=> true,
+				'S_SFPO'			=> ($topic_data['topic_first_post_id'] !== $topic_data['topic_last_post_id']) ? true : false,
 				'SFPO_MESSAGE'		=> $topic_replies ? $this->user->lang('SFPO_MSG_REPLY', $topic_replies) : '',
 				'U_SFPO_LOGIN'		=> append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect),
 			));
@@ -175,7 +175,7 @@ class listener implements EventSubscriberInterface
 		$topic_data = $event['topic_data'];
 		$post_data = $event['row'];
 		$post_template = $event['post_row'];
-		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS));
+		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && $this->user->data['user_id'] == ANONYMOUS);
 
 		if ($s_sfpo && !empty($topic_data['sfpo_characters']))
 		{
