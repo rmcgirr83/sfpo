@@ -235,7 +235,7 @@ class listener implements EventSubscriberInterface
 		{
 			$ex_fid_array = $event['ex_fid_ary'];
 			$forum_ids = $this->get_sfpo_forums();
-			$ex_fid_array = array_merge($ex_fid_array, $forum_ids);
+			$ex_fid_array = array_unique(array_merge($ex_fid_array, $forum_ids));
 			$event['ex_fid_ary'] = $ex_fid_array;
 		}
 	}
