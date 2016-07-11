@@ -76,6 +76,8 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_assign_template_vars_before'	=>	'viewtopic_assign_template_vars_before',
 			'core.viewtopic_get_post_data'			=> 'viewtopic_get_post_data',
 			'core.viewtopic_modify_post_row'		=> 'viewtopic_modify_post_row',
+			// searching
+			'core.search_modify_param_before'		=> 'search_modify_param_before',
 		);
 	}
 
@@ -110,7 +112,7 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Forum check
+	* Adjust viewtopic variables
 	*
 	* @param object $event The event object
 	* @return null
@@ -122,7 +124,7 @@ class listener implements EventSubscriberInterface
 		$post_id = $event['post_id'];
 		$start = $event['start'];
 		$total_posts = $event['total_posts'];
-		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && $this->user->data['user_id'] == ANONYMOUS);
+		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']));
 
 		if ($s_sfpo)
 		{
@@ -138,7 +140,7 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Forum check
+	* Get viewtopic post data and adjust if necessary
 	*
 	* @param object $event The event object
 	* @return null
@@ -149,7 +151,7 @@ class listener implements EventSubscriberInterface
 		$topic_data = $event['topic_data'];
 		$sql_ary = $event['sql_ary'];
 		$post_list = $event['post_list'];
-		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && $this->user->data['user_id'] == ANONYMOUS);
+		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']));
 
 		if ($s_sfpo)
 		{
@@ -161,7 +163,7 @@ class listener implements EventSubscriberInterface
 			$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
 
 			$this->template->assign_vars(array(
-				'S_SFPO'			=> ($topic_data['topic_first_post_id'] !== $topic_data['topic_last_post_id']) ? true : false,
+				'S_SFPO'	=> true,
 				'SFPO_MESSAGE'		=> $topic_replies ? $this->user->lang('SFPO_MSG_REPLY', $topic_replies) : '',
 				'U_SFPO_LOGIN'		=> append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect),
 			));
@@ -170,12 +172,19 @@ class listener implements EventSubscriberInterface
 		$event['sql_ary'] = $sql_ary;
 	}
 
+	/**
+	* Adjust viewtopic message in post row
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
 	public function viewtopic_modify_post_row($event)
 	{
 		$topic_data = $event['topic_data'];
 		$post_data = $event['row'];
 		$post_template = $event['post_row'];
-		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && $this->user->data['user_id'] == ANONYMOUS);
+		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']));
 
 		if ($s_sfpo && !empty($topic_data['sfpo_characters']))
 		{
@@ -212,6 +221,26 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
+	* Searching do not allow searching of forums that have the extension enabled
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function search_modify_param_before($event)
+	{
+		// we only care about guests..could add bots by adding
+		// || $this->user->data['is_bot'] but don't think bots even search
+		if (!$this->user->data['is_registered'])
+		{
+			$ex_fid_array = $event['ex_fid_ary'];
+			$forum_ids = $this->get_sfpo_forums();
+			$ex_fid_array = array_merge($ex_fid_array, $forum_ids);
+			$event['ex_fid_ary'] = $ex_fid_array;
+		}
+	}
+
+	/**
 	 * Trim message to specified length
 	 *
 	 * @param string	$message	Post text
@@ -231,5 +260,34 @@ class listener implements EventSubscriberInterface
 		}
 
 		return $message;
+	}
+
+	/**
+	* Get an array of forums
+	* return all forums where the extension is active
+	*
+	* @return forum id array
+	* @access private
+	*/
+	private function get_sfpo_forums()
+	{
+		$forum_ids = array();
+
+		$sql = 'SELECT forum_id
+			FROM ' . FORUMS_TABLE . '
+			WHERE sfpo_guest_enable = ' . true;
+		$result = $this->db->sql_query($sql);
+		$forums = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+
+		foreach ($forums as $forum)
+		{
+			foreach ($forum as $id)
+			{
+				$forum_ids[] = $id;
+			}
+		}
+
+		return $forum_ids;
 	}
 }
