@@ -200,7 +200,7 @@ class listener implements EventSubscriberInterface
 			}
 			else
 			{
-				$message = str_replace("\n", '<br/> ', $row['post_text']);
+				$message = str_replace("\n", '<br/> ', $post_data['post_text']);
 			}
 
 			$bbcode_bitfield = base64_decode($post_data['bbcode_bitfield']);
