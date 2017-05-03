@@ -2,9 +2,15 @@
 	"name": "rmcgirr83/sfpo",
 	"type": "phpbb-extension",
 	"description": "Allows the admin to set an option that will only allow unregistered users/guests to view the first post of any topic. The rest of the posts in the topic will ask them to login or register.",
-	"version": "1.2.2",
-	"time": "2016-03-21",
-	"keywords": ["phpbb", "extension", "topics", "users", "posts"],
+	"version": "1.2.3",
+	"time": "2017-05-03",
+	"keywords": [
+		"phpbb",
+		"extension",
+		"topics",
+		"users",
+		"posts"
+	],
 	"license": "GPL-2.0",
 	"authors": [
 		{
@@ -14,13 +20,18 @@
 	],
 	"require": {
 		"php": ">=5.3.3",
-		"phpbb/phpbb": ">=3.1.10-RC1",
-		"nickvergessen/phpbb-tool-trimmessage": "1.3.*"
+        "nickvergessen/phpbb-tool-trimmessage": "1.3.*",
+        "phpbb/phpbb": ">=3.1.0,<3.3"
 	},
 	"extra": {
 		"display-name": "Show First Post Only to Guest",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.1.0,<3.3"
+       },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/show_first_post_only_to_guest",
+            "filename": "version_check"
         }
 	}
 }

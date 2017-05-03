@@ -195,13 +195,16 @@ class listener implements EventSubscriberInterface
 
 			if (strlen($post_data['post_text']) > $topic_data['sfpo_characters'])
 			{
-				$message = str_replace(array("\n", "\r"), array('<br />', "\n"), $post_data['post_text']);
-				$message = $this->trim_message($message, $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
+				if (phpbb_version_compare($this->config['version'], '3.2.0', '=>'))
+				{
+					$message = $this->trim_message(\s9e\TextFormatter\Utils::removeFormatting($post_data['post_text']), $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
 			}
 			else
 			{
-				$message = str_replace("\n", '<br/> ', $post_data['post_text']);
+					$message = $this->trim_message($post_data['post_text'], $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
+				}
 			}
+			$message = str_replace("\n", '<br/> ', $post_data['post_text']);
 
 			$bbcode_bitfield = base64_decode($post_data['bbcode_bitfield']);
 			if ($bbcode_bitfield !== '')
