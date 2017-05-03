@@ -197,15 +197,21 @@ class listener implements EventSubscriberInterface
 			{
 				if (phpbb_version_compare($this->config['version'], '3.2.0', '=>'))
 				{
+					// remove all bbcode formatting...not sure about emoticons yet
 					$message = $this->trim_message(\s9e\TextFormatter\Utils::removeFormatting($post_data['post_text']), $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
+				}
+				else
+				{
+						// for 3.1
+					$message = str_replace(array("\n", "\r"), array('<br />', "\n"), $post_data['post_text']);
+					$message = $this->trim_message($post_data['post_text'], $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
+				}
+				$message = str_replace("\n", '<br/> ', $message);
 			}
 			else
 			{
-					$message = $this->trim_message($post_data['post_text'], $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
-				}
+				$message = str_replace("\n", '<br/> ', $post_data['post_text']);
 			}
-			$message = str_replace("\n", '<br/> ', $post_data['post_text']);
-
 			$bbcode_bitfield = base64_decode($post_data['bbcode_bitfield']);
 			if ($bbcode_bitfield !== '')
 			{
