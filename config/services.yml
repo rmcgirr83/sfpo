@@ -2,6 +2,7 @@ services:
     rmcgirr83.sfpo.listener:
         class: rmcgirr83\sfpo\event\listener
         arguments:
+            - '@config'
             - '@content.visibility'
             - '@dbal.conn'
             - '@request'

@@ -19,6 +19,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class listener implements EventSubscriberInterface
 {
+	/** @var \phpbb\config\config */
+	protected $config;
+	
 	/** @var \phpbb\content_visibility */
 	protected $content_visibility;
 
@@ -41,6 +44,7 @@ class listener implements EventSubscriberInterface
 	protected $php_ext;
 
 	public function __construct(
+		\phpbb\config\config $config,
 		\phpbb\content_visibility $content_visibility,
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\request\request $request,
@@ -49,6 +53,7 @@ class listener implements EventSubscriberInterface
 		$phpbb_root_path,
 		$php_ext)
 	{
+		$this->config = $config;
 		$this->content_visibility = $content_visibility;
 		$this->db = $db;
 		$this->request = $request;
@@ -195,14 +200,14 @@ class listener implements EventSubscriberInterface
 
 			if (strlen($post_data['post_text']) > $topic_data['sfpo_characters'])
 			{
-				if (phpbb_version_compare($this->config['version'], '3.2.0', '=>'))
+				if (phpbb_version_compare($this->config['version'], '3.2.0', '>='))
 				{
 					// remove all bbcode formatting...not sure about emoticons yet
 					$message = $this->trim_message(\s9e\TextFormatter\Utils::removeFormatting($post_data['post_text']), $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
 				}
 				else
 				{
-						// for 3.1
+					// for 3.1
 					$message = str_replace(array("\n", "\r"), array('<br />', "\n"), $post_data['post_text']);
 					$message = $this->trim_message($post_data['post_text'], $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
 				}
