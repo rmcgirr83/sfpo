@@ -21,7 +21,7 @@ class listener implements EventSubscriberInterface
 {
 	/** @var \phpbb\config\config */
 	protected $config;
-	
+
 	/** @var \phpbb\content_visibility */
 	protected $content_visibility;
 
