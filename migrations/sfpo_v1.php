@@ -26,4 +26,15 @@ class sfpo_v1 extends \phpbb\db\migration\migration
 			),
 		);
 	}
+
+	public function revert_schema()
+	{
+		return array(
+			'drop_columns' => array(
+				$this->table_prefix . 'forums'	=> array(
+					'sfpo_guest_enable',
+				),
+			),
+		);
+	}
 }
