@@ -38,7 +38,7 @@ class listener implements EventSubscriberInterface
 	protected $user;
 
 	/** @var string phpBB root path */
-	protected $phpbb_root_path;
+	protected $root_path;
 
 	/** @var string phpEx */
 	protected $php_ext;
@@ -50,7 +50,7 @@ class listener implements EventSubscriberInterface
 		\phpbb\request\request $request,
 		\phpbb\template\template $template,
 		\phpbb\user $user,
-		$phpbb_root_path,
+		$root_path,
 		$php_ext)
 	{
 		$this->config = $config;
@@ -59,7 +59,7 @@ class listener implements EventSubscriberInterface
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
-		$this->root_path = $phpbb_root_path;
+		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
 
@@ -135,7 +135,7 @@ class listener implements EventSubscriberInterface
 		{
 			$topic_data['prev_posts'] = $start = 0;
 			$total_posts = 1;
-			$post_id == $topic_data['topic_first_post_id'];
+			$post_id = $topic_data['topic_first_post_id'];
 		}
 
 		$event['total_posts'] = $total_posts;
