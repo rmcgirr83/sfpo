@@ -158,6 +158,9 @@ class listener implements EventSubscriberInterface
 		$post_list = $event['post_list'];
 		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']));
 
+		// only show the div if post_list is greater than one
+		$post_list_count = count($post_list);
+		
 		if ($s_sfpo)
 		{
 			$this->user->add_lang_ext('rmcgirr83/sfpo', 'common');
@@ -168,7 +171,7 @@ class listener implements EventSubscriberInterface
 			$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
 
 			$this->template->assign_vars(array(
-				'S_SFPO'	=> true,
+				'S_SFPO'	=> ($post_list_count <= 1) ? false : true,
 				'SFPO_MESSAGE'		=> $topic_replies ? $this->user->lang('SFPO_MSG_REPLY', $topic_replies) : '',
 				'U_SFPO_LOGIN'		=> append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect),
 			));
@@ -269,7 +272,9 @@ class listener implements EventSubscriberInterface
 		{
 			$trim = new \Nickvergessen\TrimMessage\TrimMessage($message, $bbcode_uid, $length);
 			$message = $trim->message();
-			$message = str_replace(' [...]', $this->user->lang('SFPO_APPEND_MESSAGE'), $message);
+			$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
+			$link = append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect);
+			$message = str_replace(' [...]', $this->user->lang('SFPO_APPEND_MESSAGE', '<a href="' . $link . '">', '</a>'), $message);
 			unset($trim);
 		}
 
