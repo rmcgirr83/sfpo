@@ -160,7 +160,7 @@ class listener implements EventSubscriberInterface
 
 		// only show the div if post_list is greater than one
 		$post_list_count = count($post_list);
-		
+
 		if ($s_sfpo)
 		{
 			$this->user->add_lang_ext('rmcgirr83/sfpo', 'common');
