@@ -25,7 +25,7 @@
 	"extra": {
 		"display-name": "Show First Post Only to Guest",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.0,<3.3"
+			"phpbb/phpbb": ">=3.1.0"
        },
         "version-check": {
             "host": "www.phpbb.com",

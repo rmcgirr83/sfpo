@@ -19,6 +19,8 @@ cd phpBB3
 git clone https://github.com/rmcgirr83/sfpo.git ext/rmcgirr83/sfpo/
 ```
 
+This extension has a dependency on another github repo.  Please make sure to run composer.phar install or the posts will not be truncated.
+
 ### 2. activate
 Go to admin panel -> tab customise -> Manage extensions -> enable Show First Post Only to Guest
 
