@@ -12,6 +12,14 @@ namespace rmcgirr83\sfpo\event;
 /**
 * @ignore
 */
+use phpbb\config\config;
+use phpbb\content_visibility;
+use phpbb\db\driver\driver_interface;
+use phpbb\language\language;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\textformatter\s9e\utils;
+use phpbb\user;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -25,14 +33,20 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\content_visibility */
 	protected $content_visibility;
 
-	/** @var \phpbb\db\driver\driver */
+	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
+
+	/** @var \phpbb\language\language */
+	protected $language;
 
 	/** @var \phpbb\request\request */
 	protected $request;
 
 	/** @var \phpbb\template\template */
 	protected $template;
+
+	/** @var phpbb\textformatter\s9e\utils */
+	protected $utils;
 
 	/** @var \phpbb\user */
 	protected $user;
@@ -44,20 +58,24 @@ class listener implements EventSubscriberInterface
 	protected $php_ext;
 
 	public function __construct(
-		\phpbb\config\config $config,
-		\phpbb\content_visibility $content_visibility,
-		\phpbb\db\driver\driver_interface $db,
-		\phpbb\request\request $request,
-		\phpbb\template\template $template,
-		\phpbb\user $user,
+		config $config,
+		content_visibility $content_visibility,
+		driver_interface $db,
+		language $language,
+		request $request,
+		template $template,
+		utils $utils,
+		user $user,
 		$root_path,
 		$php_ext)
 	{
 		$this->config = $config;
 		$this->content_visibility = $content_visibility;
 		$this->db = $db;
+		$this->language = $language;
 		$this->request = $request;
 		$this->template = $template;
+		$this->utils = $utils;
 		$this->user = $user;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
@@ -163,7 +181,7 @@ class listener implements EventSubscriberInterface
 
 		if ($s_sfpo)
 		{
-			$this->user->add_lang_ext('rmcgirr83/sfpo', 'common');
+			$this->language->add_lang('common', 'rmcgirr83/sfpo');
 			$post_list = array((int) $topic_data['topic_first_post_id']);
 			$sql_ary['WHERE'] = $this->db->sql_in_set('p.post_id', $post_list) . ' AND u.user_id = p.poster_id';
 
@@ -172,7 +190,7 @@ class listener implements EventSubscriberInterface
 
 			$this->template->assign_vars(array(
 				'S_SFPO'	=> ($post_list_count <= 1) ? false : true,
-				'SFPO_MESSAGE'		=> $topic_replies ? $this->user->lang('SFPO_MSG_REPLY', $topic_replies) : '',
+				'SFPO_MESSAGE'		=> $topic_replies ? $this->language->lang('SFPO_MSG_REPLY', $topic_replies) : '',
 				'U_SFPO_LOGIN'		=> append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect),
 			));
 		}
@@ -206,7 +224,7 @@ class listener implements EventSubscriberInterface
 				if (phpbb_version_compare($this->config['version'], '3.2.0', '>='))
 				{
 					// remove all bbcode formatting...not sure about emoticons yet
-					$message = $this->trim_message(\s9e\TextFormatter\Utils::removeFormatting($post_data['post_text']), $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
+					$message = $this->trim_message($this->utils->clean_formatting($post_data['post_text']), $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
 				}
 				else
 				{
@@ -274,7 +292,7 @@ class listener implements EventSubscriberInterface
 			$message = $trim->message();
 			$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
 			$link = append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect);
-			$message = str_replace(' [...]', $this->user->lang('SFPO_APPEND_MESSAGE', '<a href="' . $link . '">', '</a>'), $message);
+			$message = str_replace(' [...]', $this->language->lang('SFPO_APPEND_MESSAGE', '<a href="' . $link . '">', '</a>'), $message);
 			unset($trim);
 		}
 
