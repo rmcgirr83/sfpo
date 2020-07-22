@@ -96,7 +96,7 @@ class listener implements EventSubscriberInterface
 			'core.acp_manage_forums_initialise_data'	=> 'acp_manage_forums_initialise_data',
 			'core.acp_manage_forums_display_form'		=> 'acp_manage_forums_display_form',
 			// Viewing a topic
-			'core.viewtopic_assign_template_vars_before'	=>	'viewtopic_assign_template_vars_before',
+			'core.viewtopic_assign_template_vars_before'	=> 'viewtopic_assign_template_vars_before',
 			'core.viewtopic_get_post_data'			=> 'viewtopic_get_post_data',
 			'core.viewtopic_modify_post_row'		=> 'viewtopic_modify_post_row',
 			// searching
