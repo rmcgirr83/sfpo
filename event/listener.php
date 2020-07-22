@@ -18,7 +18,7 @@ use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
 use phpbb\request\request;
 use phpbb\template\template;
-use phpbb\textformatter\s9e\utils;
+use phpbb\textformatter\utils_interface;
 use phpbb\user;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
