@@ -13,6 +13,8 @@ namespace rmcgirr83\sfpo\event;
 * @ignore
 */
 use phpbb\config\config;
+use phpbb\content_visibility;
+use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
 use phpbb\request\request;
 use phpbb\template\template;
