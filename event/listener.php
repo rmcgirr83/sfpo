@@ -45,7 +45,7 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\template\template */
 	protected $template;
 
-	/** @var phpbb\textformatter\s9e\utils */
+	/** @var phpbb\textformatter\utils_interface */
 	protected $utils;
 
 	/** @var \phpbb\user */
@@ -64,7 +64,7 @@ class listener implements EventSubscriberInterface
 		language $language,
 		request $request,
 		template $template,
-		utils $utils,
+		utils_interface $utils,
 		user $user,
 		$root_path,
 		$php_ext)
