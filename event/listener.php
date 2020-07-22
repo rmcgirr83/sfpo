@@ -9,9 +9,6 @@
 
 namespace rmcgirr83\sfpo\event;
 
-/**
-* @ignore
-*/
 use phpbb\config\config;
 use phpbb\content_visibility;
 use phpbb\db\driver\driver_interface;
@@ -45,7 +42,7 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\template\template */
 	protected $template;
 
-	/** @var phpbb\textformatter\s9e\utils */
+	/** @var utils */
 	protected $utils;
 
 	/** @var \phpbb\user */
