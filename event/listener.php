@@ -15,6 +15,7 @@ namespace rmcgirr83\sfpo\event;
 use phpbb\config\config;
 use phpbb\language\language;
 use phpbb\template\template;
+use phpbb\textformatter\s9e\utils;
 use phpbb\user;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
