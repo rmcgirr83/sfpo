@@ -149,6 +149,7 @@ class listener implements EventSubscriberInterface
 		$total_posts = $event['total_posts'];
 		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']));
 
+		$this->language->add_lang('common', 'rmcgirr83/sfpo');
 		if ($s_sfpo)
 		{
 			$topic_data['prev_posts'] = $start = 0;
@@ -181,7 +182,6 @@ class listener implements EventSubscriberInterface
 
 		if ($s_sfpo)
 		{
-			$this->language->add_lang('common', 'rmcgirr83/sfpo');
 			$post_list = array((int) $topic_data['topic_first_post_id']);
 			$sql_ary['WHERE'] = $this->db->sql_in_set('p.post_id', $post_list) . ' AND u.user_id = p.poster_id';
 
