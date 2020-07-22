@@ -8,7 +8,7 @@ services:
             - '@language'
             - '@request'
             - '@template'
-            - '@text_formatter.utils'
+            - '@text_formatter.s9e.utils'
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'

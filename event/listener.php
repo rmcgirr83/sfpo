@@ -18,7 +18,7 @@ use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
 use phpbb\request\request;
 use phpbb\template\template;
-use phpbb\textformatter\utils_interface;
+use phpbb\textformatter\s9e\utils as utils;
 use phpbb\user;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -45,7 +45,7 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\template\template */
 	protected $template;
 
-	/** @var phpbb\textformatter\utils_interface */
+	/** @var phpbb\textformatter\s9e\utils */
 	protected $utils;
 
 	/** @var \phpbb\user */
@@ -64,7 +64,7 @@ class listener implements EventSubscriberInterface
 		language $language,
 		request $request,
 		template $template,
-		utils_interface $utils,
+		utils $utils,
 		user $user,
 		$root_path,
 		$php_ext)
