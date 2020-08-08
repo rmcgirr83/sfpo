@@ -10,6 +10,7 @@
 namespace rmcgirr83\sfpo;
 
 use phpbb\extension\base;
+
 /**
 * Extension class for custom enable/disable/purge actions
 */
