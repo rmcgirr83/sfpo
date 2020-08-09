@@ -144,11 +144,10 @@ class listener implements EventSubscriberInterface
 		$post_id = $event['post_id'];
 		$start = $event['start'];
 		$total_posts = $event['total_posts'];
-		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']));
 
-		$this->language->add_lang('common', 'rmcgirr83/sfpo');
-		if ($s_sfpo)
+		if ($this->s_sfpo($topic_data['sfpo_guest_enable']))
 		{
+			$this->language->add_lang('common', 'rmcgirr83/sfpo');
 			$topic_data['prev_posts'] = $start = 0;
 			$total_posts = 1;
 			$post_id = $topic_data['topic_first_post_id'];
@@ -172,12 +171,11 @@ class listener implements EventSubscriberInterface
 		$topic_data = $event['topic_data'];
 		$sql_ary = $event['sql_ary'];
 		$post_list = $event['post_list'];
-		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']));
 
 		// only show the div if post_list is greater than one
 		$post_list_count = count($post_list);
 
-		if ($s_sfpo)
+		if ($this->s_sfpo($topic_data['sfpo_guest_enable']))
 		{
 			$post_list = array((int) $topic_data['topic_first_post_id']);
 			$sql_ary['WHERE'] = $this->db->sql_in_set('p.post_id', $post_list) . ' AND u.user_id = p.poster_id';
@@ -191,6 +189,7 @@ class listener implements EventSubscriberInterface
 				'U_SFPO_LOGIN'		=> append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect),
 			));
 		}
+
 		$event['post_list'] = $post_list;
 		$event['sql_ary'] = $sql_ary;
 	}
@@ -207,9 +206,8 @@ class listener implements EventSubscriberInterface
 		$topic_data = $event['topic_data'];
 		$post_data = $event['row'];
 		$post_template = $event['post_row'];
-		$s_sfpo = (!empty($topic_data['sfpo_guest_enable']) && ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']));
 
-		if ($s_sfpo && !empty($topic_data['sfpo_characters']))
+		if ($this->s_sfpo($topic_data['sfpo_guest_enable']) && !empty($topic_data['sfpo_characters']))
 		{
 			if (!class_exists('bbcode'))
 			{
@@ -323,5 +321,18 @@ class listener implements EventSubscriberInterface
 		}
 
 		return $forum_ids;
+	}
+
+	/**
+	* A simple switch check		just checks to see if we should apply the sfpo to the user
+	*
+	* @return bool
+	* @access private
+	*/
+	private function s_sfpo($sfpo_guest_enable = false)
+	{
+		$s_sfpo = ($sfpo_guest_enable && ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']));
+
+		return $s_sfpo;
 	}
 }
