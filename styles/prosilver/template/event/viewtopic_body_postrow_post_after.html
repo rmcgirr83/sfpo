@@ -1,11 +1,11 @@
-<!-- IF S_SFPO -->
+{% if S_SFPO %}
 <div class="post bg1">
 	<div class="inner sfpo">
 		<div>
-		<div class="content"><h4>{SFPO_MESSAGE} <br><br>{L_SFPO_MSG_REGISTER}</h4><br>
-		<!-- IF S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) --><a class="button icon-button" href="{U_REGISTER}">{L_REGISTER}</a><!-- ENDIF --> <a class="button icon-button" href="{U_SFPO_LOGIN}">{L_LOGIN_LOGOUT}</a></div>
+		<div class="content"><h4>{{ SFPO_MESSAGE }} <br><br>{{ lang('SFPO_MSG_REGISTER') }}</h4><br>
+		{% if S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) %}<a class="button icon-button" href="{{ U_REGISTER }}">{{ lang('REGISTER') }}</a>{% endif %} <a class="button icon-button" href="{{ U_SFPO_LOGIN }}">{{ lang('LOGIN_LOGOUT') }}</a></div>
 		</div> 
 		<div class="back2top">&nbsp;</div>
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}
