@@ -43,7 +43,7 @@ class sfpo_trim
 		$html = '<?xml encoding="utf-8"?><html><body><div>' . $html . '</div></body></html>';
 
 		$this->dom = new DOMDocument;
-		$this->dom->loadHTML($html, LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOCDATA | LIBXML_NOENT | LIBXML_NONET);
+		$this->dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOCDATA | LIBXML_NOENT | LIBXML_NONET);
 
 		$this->len = 0;
 		$this->max = $max;
@@ -70,11 +70,11 @@ class sfpo_trim
 				--$i;
 				$element->removeChild($child);
 			}
-			elseif ($child instanceof DOMElement)
+			else if ($child instanceof DOMElement)
 			{
 				$this->trimElement($child);
 			}
-			elseif ($child instanceof DOMText)
+			else if ($child instanceof DOMText)
 			{
 				$max = $this->max - $this->len;
 				if ($child->length > $max)
