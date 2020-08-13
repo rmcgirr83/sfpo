@@ -2,7 +2,7 @@
 
 /**
 *
-* @package Show first post only to guest
+* @package Show First Post Only To Guest
 * @copyright (c) 2016 Rich McGirr (RMcGirr83)
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -15,7 +15,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -33,11 +33,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 //Show First Post Only
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'SFPO_MSG_REPLY'        => array(
 		1 => 'This topic has <strong>1</strong> reply',
 		2 => 'This topic has <strong>%d</strong> replies',
 	),
 	'SFPO_MSG_REGISTER'        => 'You must be a registered member and logged in to view the replies in this topic.',
-	'SFPO_APPEND_MESSAGE' => '...<em>%slogin%s</em> to view the rest of this post',
-));
+	'SFPO_APPEND_MESSAGE' => '<em>%slogin%s</em> to view the rest of this post',
+]);

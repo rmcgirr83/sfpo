@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Show first post only to guest
+* @package Show First Post Only To Guest
 * @copyright (c) 2016 Rich McGirr (RMcGirr83)
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *

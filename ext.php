@@ -10,7 +10,6 @@
 namespace rmcgirr83\sfpo;
 
 use phpbb\extension\base;
-
 /**
 * Extension class for custom enable/disable/purge actions
 */
@@ -21,6 +20,9 @@ class ext extends base
 
 	/** @var phpBB check version */
 	const PHPBB_VERSION = '3.2.0';
+
+	/** @var PHP check version */
+	const PHP_VERSION = '7.1';
 
 	/**
 	 * Enable extension if phpBB and mbstring version requirement is met
@@ -43,6 +45,11 @@ class ext extends base
 		if (!(phpbb_version_compare($config['version'], self::PHPBB_VERSION, '>=')))
 		{
 			trigger_error($language->lang('EXT_PHPBB_ERROR', self::PHPBB_VERSION, $config['version']), E_USER_WARNING);
+		}
+
+		if (!(phpbb_version_compare(PHP_VERSION, self::PHP_VERSION, '>=')))
+		{
+			trigger_error($language->lang('EXT_PHP_ERROR', self::PHP_VERSION, PHP_VERSION), E_USER_WARNING);
 		}
 
 		return true;

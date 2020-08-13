@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Show first post only to guest
+* @package Show First Post Only To Guest
 * @copyright (c) 2020 Rich McGirr (RMcGirr83)
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -39,4 +39,5 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'EXT_ENABLE_ERROR'	=> '<strong>This extension requires a phpBB version of %1$s or greater.<br><br>Your version of phpBB is %2$s.</strong>',
 	'EXT_MBSTRING_ERROR'	=> '<strong>This extension requires the PHP mbstring extension which is not available.<br><br>Please enable the extension within your PHP ini settings in order to use this extension.</strong>',
+	'EXT_PHP_ERROR'		=> '<strong>This extension requires a version of PHP of %1$s (or greater)<br><br>Your version of PHP is %2$s.</strong>',
 ]);

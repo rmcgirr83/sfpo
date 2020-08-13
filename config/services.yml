@@ -8,9 +8,12 @@ services:
             - '@language'
             - '@request'
             - '@template'
-            - '@text_formatter.s9e.utils'
             - '@user'
+            - '@rmcgirr83.sfpo.core.trim'
             - '%core.root_path%'
             - '%core.php_ext%'
         tags:
             - { name: event.listener }
+
+    rmcgirr83.sfpo.core.trim:
+        class: rmcgirr83\sfpo\core\sfpo_trim

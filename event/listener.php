@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package Show first post only to guest
+* @package Show First Post Only To Guest
 * @copyright (c) 2016 Rich McGirr (RMcGirr83)
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -15,8 +15,8 @@ use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
 use phpbb\request\request;
 use phpbb\template\template;
-use phpbb\textformatter\s9e\utils as utils;
 use phpbb\user;
+use rmcgirr83\sfpo\core\sfpo_trim;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -48,6 +48,9 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\user */
 	protected $user;
 
+	/* @var \rmcgirr83\sfpo\core\sfpo_trim */
+	protected $sfpo_trim;
+
 	/** @var string phpBB root path */
 	protected $root_path;
 
@@ -61,19 +64,21 @@ class listener implements EventSubscriberInterface
 		language $language,
 		request $request,
 		template $template,
-		utils $utils,
 		user $user,
+		sfpo_trim $sfpo_trim,
 		$root_path,
 		$php_ext)
 	{
+		mb_internal_encoding('UTF-8');
+
 		$this->config = $config;
 		$this->content_visibility = $content_visibility;
 		$this->db = $db;
 		$this->language = $language;
 		$this->request = $request;
 		$this->template = $template;
-		$this->utils = $utils;
 		$this->user = $user;
+		$this->sfpo_trim = $sfpo_trim;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 	}
@@ -204,47 +209,21 @@ class listener implements EventSubscriberInterface
 	public function viewtopic_modify_post_row($event)
 	{
 		$topic_data = $event['topic_data'];
-		$post_data = $event['row'];
 		$post_template = $event['post_row'];
 
 		if ($this->s_sfpo($topic_data['sfpo_guest_enable']) && !empty($topic_data['sfpo_characters']))
 		{
-			if (!class_exists('bbcode'))
+			if (utf8_strlen($post_template['MESSAGE']) > $topic_data['sfpo_characters'])
 			{
-				include($this->root_path . 'includes/bbcode.' . $this->php_ext);
-			}
+				$message = $this->sfpo_trim->trimHtml($post_template['MESSAGE'], $topic_data['sfpo_characters']);
 
-			if (strlen($post_data['post_text']) > $topic_data['sfpo_characters'])
-			{
-				if (phpbb_version_compare($this->config['version'], '3.2.0', '>='))
-				{
-					// remove all bbcode formatting...not sure about emoticons yet
-					$message = $this->trim_message($this->utils->clean_formatting($post_data['post_text']), $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
-				}
-				else
-				{
-					// for 3.1
-					$message = str_replace(array("\n", "\r"), array('<br />', "\n"), $post_data['post_text']);
-					$message = $this->trim_message($post_data['post_text'], $post_data['bbcode_uid'], $topic_data['sfpo_characters']);
-				}
-				$message = str_replace("\n", '<br/> ', $message);
+				$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
+				$link = append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect);
+
+				$message .= $this->language->lang('ELLIPSIS') . $this->language->lang('SFPO_APPEND_MESSAGE', '<a href="' . $link . '">', '</a>');
+
+				$post_template['MESSAGE'] = $message;
 			}
-			else
-			{
-				$message = str_replace("\n", '<br/> ', $post_data['post_text']);
-			}
-			$bbcode_bitfield = base64_decode($post_data['bbcode_bitfield']);
-			if ($bbcode_bitfield !== '')
-			{
-				$bbcode = new \bbcode(base64_encode($bbcode_bitfield));
-			}
-			$message = censor_text($message);
-			if ($post_data['bbcode_bitfield'])
-			{
-				$bbcode->bbcode_second_pass($message, $post_data['bbcode_uid'], $post_data['bbcode_bitfield']);
-			}
-			$message = smiley_text($message);
-			$post_template['MESSAGE'] = $message;
 		}
 
 		$event['post_row'] = $post_template;
@@ -268,30 +247,6 @@ class listener implements EventSubscriberInterface
 			$ex_fid_array = array_unique(array_merge($ex_fid_array, $forum_ids));
 			$event['ex_fid_ary'] = $ex_fid_array;
 		}
-	}
-
-	/**
-	 * Trim message to specified length
-	 *
-	 * @param string	$message	Post text
-	 * @param string	$bbcode_uid	BBCode UID
-	 * @param int		$length		Length the text should have after shortening
-	 *
-	 * @return string trimmed messsage
-	 */
-	private function trim_message($message, $bbcode_uid, $length)
-	{
-		if (class_exists('\Nickvergessen\TrimMessage\TrimMessage'))
-		{
-			$trim = new \Nickvergessen\TrimMessage\TrimMessage($message, $bbcode_uid, $length);
-			$message = $trim->message();
-			$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
-			$link = append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect);
-			$message = str_replace(' [...]', $this->language->lang('SFPO_APPEND_MESSAGE', '<a href="' . $link . '">', '</a>'), $message);
-			unset($trim);
-		}
-
-		return $message;
 	}
 
 	/**
