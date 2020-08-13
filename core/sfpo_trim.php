@@ -1,13 +1,11 @@
 <?php declare(strict_types=1);
+
 /**
-*
 * @package Show First Post Only To Guest
 * @copyright (c) 2020 Rich McGirr (RMcGirr83)
 * much thanks to JoshyPHP for the assistance...
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
 */
-
 
 namespace rmcgirr83\sfpo\core;
 
@@ -58,7 +56,6 @@ class sfpo_trim
 
 	protected function trimElement(dom_element $element): void
 	{
-
 		$i = 0;
 		while ($i < $element->childNodes->length)
 		{

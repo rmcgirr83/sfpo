@@ -69,8 +69,6 @@ class listener implements EventSubscriberInterface
 		$root_path,
 		$php_ext)
 	{
-		mb_internal_encoding('UTF-8');
-
 		$this->config = $config;
 		$this->content_visibility = $content_visibility;
 		$this->db = $db;
