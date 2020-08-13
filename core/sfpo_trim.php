@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
 *
 * @package Show First Post Only To Guest
@@ -8,7 +8,6 @@
 *
 */
 
-declare(strict_types=1);
 
 namespace rmcgirr83\sfpo\core;
 
@@ -21,17 +20,17 @@ class sfpo_trim
 	/**
 	* @var DOMDocument
 	*/
-	protected $dom;
+	protected $dom_document;
 
 	/**
 	* @var int Current length of text processed
 	*/
-	protected $len;
+	protected $length;
 
 	/**
 	* @var int Current length of text processed
 	*/
-	protected $max;
+	protected $max_length;
 
 	/**
 	* @param  string $html Original HTML
@@ -45,8 +44,8 @@ class sfpo_trim
 		$this->dom = new dom_document;
 		$this->dom->loadHTML($html, LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOCDATA | LIBXML_NOENT | LIBXML_NONET);
 
-		$this->len = 0;
-		$this->max = $max;
+		$this->length = 0;
+		$this->max_length = $max;
 
 		$this->trimElement($this->dom->documentElement->firstChild);
 
@@ -65,7 +64,7 @@ class sfpo_trim
 		{
 			$child = $element->childNodes[$i++];
 
-			if ($this->len >= $this->max)
+			if ($this->length >= $this->max_length)
 			{
 				--$i;
 				$element->removeChild($child);
@@ -76,12 +75,12 @@ class sfpo_trim
 			}
 			else if ($child instanceof dom_text)
 			{
-				$max = $this->max - $this->len;
+				$max = $this->max_length - $this->length;
 				if ($child->length > $max)
 				{
 					$child->deleteData($max, $child->length);
 				}
-				$this->len += $child->length;
+				$this->length += $child->length;
 			}
 		}
 	}
