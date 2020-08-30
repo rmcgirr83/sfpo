@@ -187,7 +187,7 @@ class listener implements EventSubscriberInterface
 			$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
 
 			$this->template->assign_vars(array(
-				'S_SFPO'	=> ($post_list_count <= 1) ? false : true,
+				'S_SFPO'	=> $post_list_count > 1,
 				'SFPO_MESSAGE'		=> $topic_replies ? $this->language->lang('SFPO_MSG_REPLY', $topic_replies) : '',
 				'U_SFPO_LOGIN'		=> append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect),
 			));
@@ -260,7 +260,7 @@ class listener implements EventSubscriberInterface
 
 		$sql = 'SELECT forum_id
 			FROM ' . FORUMS_TABLE . '
-			WHERE sfpo_guest_enable = ' . true;
+			WHERE sfpo_guest_enable = 1';
 		$result = $this->db->sql_query($sql);
 		$forums = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);
