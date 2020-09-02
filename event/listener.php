@@ -42,9 +42,6 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\template\template */
 	protected $template;
 
-	/** @var utils */
-	protected $utils;
-
 	/** @var \phpbb\user */
 	protected $user;
 
@@ -178,7 +175,7 @@ class listener implements EventSubscriberInterface
 		// only show the div if post_list is greater than one
 		$post_list_count = count($post_list);
 
-		if ($this->s_sfpo($topic_data['sfpo_guest_enable']))
+		if ($this->s_sfpo($topic_data['sfpo_guest_enable']) && $post_list_count > 1)
 		{
 			$post_list = array((int) $topic_data['topic_first_post_id']);
 			$sql_ary['WHERE'] = $this->db->sql_in_set('p.post_id', $post_list) . ' AND u.user_id = p.poster_id';
@@ -187,7 +184,7 @@ class listener implements EventSubscriberInterface
 			$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
 
 			$this->template->assign_vars(array(
-				'S_SFPO'	=> $post_list_count > 1,
+				'S_SFPO'			=> true,
 				'SFPO_MESSAGE'		=> $topic_replies ? $this->language->lang('SFPO_MSG_REPLY', $topic_replies) : '',
 				'U_SFPO_LOGIN'		=> append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect),
 			));
