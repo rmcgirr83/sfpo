@@ -79,12 +79,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Assign functions defined in this class to event listeners in the core
-	*
-	* @return array
-	* @static
-	* @access public
-	*/
+	 * Assign functions defined in this class to event listeners in the core
+	 *
+	 * @return array
+	 * @static
+	 * @access public
+	 */
 	static public function getSubscribedEvents()
 	{
 		return array(
@@ -132,12 +132,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Adjust viewtopic variables
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Adjust viewtopic variables
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function viewtopic_assign_template_vars_before($event)
 	{
 		$topic_data = $event['topic_data'];
@@ -160,12 +160,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Get viewtopic post data and adjust if necessary
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Get viewtopic post data and adjust if necessary
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function viewtopic_get_post_data($event)
 	{
 		$topic_data = $event['topic_data'];
@@ -195,12 +195,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Adjust viewtopic message in post row
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Adjust viewtopic message in post row
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function viewtopic_modify_post_row($event)
 	{
 		$topic_data = $event['topic_data'];
@@ -225,12 +225,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Searching do not allow searching of forums that have the extension enabled
-	*
-	* @param object $event The event object
-	* @return null
-	* @access public
-	*/
+	 * Searching do not allow searching of forums that have the extension enabled
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
 	public function search_modify_param_before($event)
 	{
 		// we only care about guests..could add bots by adding
@@ -245,12 +245,12 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Get an array of forums
-	* return all forums where the extension is active
-	*
-	* @return forum id array
-	* @access private
-	*/
+	 * Get an array of forums
+	 * return all forums where the extension is active
+	 *
+	 * @return forum id array
+	 * @access private
+	 */
 	private function get_sfpo_forums()
 	{
 		$forum_ids = array();
@@ -274,11 +274,11 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* A simple switch check		just checks to see if we should apply the sfpo to the user
-	*
-	* @return bool
-	* @access private
-	*/
+	 * A simple switch check		just checks to see if we should apply the sfpo to the user
+	 *
+	 * @return bool
+	 * @access private
+	 */
 	private function s_sfpo($sfpo_guest_enable = false)
 	{
 		$s_sfpo = ($sfpo_guest_enable && ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']));

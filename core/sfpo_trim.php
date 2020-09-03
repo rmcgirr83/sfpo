@@ -16,25 +16,25 @@ use DOMText;
 class sfpo_trim
 {
 	/**
-	* @var DOMDocument
-	*/
+	 * @var DOMDocument
+	 */
 	protected $dom_document;
 
 	/**
-	* @var int Current length of text processed
-	*/
+	 * @var int Current length of text processed
+	 */
 	protected $length;
 
 	/**
-	* @var int Current length of text processed
-	*/
+	 * @var int Current length of text processed
+	 */
 	protected $max_length;
 
 	/**
-	* @param  string $html Original HTML
-	* @param  int    $max  Max length of text kept
-	* @return string       Modified HTML
-	*/
+	 * @param  string $html Original HTML
+	 * @param  int    $max  Max length of text kept
+	 * @return string       Modified HTML
+	 */
 	public function trimHtml(string $html, int $max): string
 	{
 		$html = '<?xml encoding="utf-8"?><html><body><div>' . $html . '</div></body></html>';
