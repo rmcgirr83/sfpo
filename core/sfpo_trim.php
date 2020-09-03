@@ -66,7 +66,7 @@ class sfpo_trim
 				--$i;
 				$element->removeChild($child);
 			}
-			else if ($child instanceof dom_element)
+			else if ($child instanceof DOMElement)
 			{
 				$this->trimElement($child);
 			}
