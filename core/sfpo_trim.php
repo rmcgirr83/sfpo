@@ -31,6 +31,11 @@ class sfpo_trim
 	protected $max_length;
 
 	/**
+	* @var int Current length of text processed
+	*/
+	protected $dom;
+
+	/**
 	* @param  string $html Original HTML
 	* @param  int    $max  Max length of text kept
 	* @return string       Modified HTML
