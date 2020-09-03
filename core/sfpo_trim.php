@@ -9,9 +9,9 @@
 
 namespace rmcgirr83\sfpo\core;
 
-use DOMDocument as dom_document;
-use DOMElement as dom_element;
-use DOMText as dom_text;
+use DOMDocument;
+use DOMElement;
+use DOMText;
 
 class sfpo_trim
 {
@@ -39,7 +39,7 @@ class sfpo_trim
 	{
 		$html = '<?xml encoding="utf-8"?><html><body><div>' . $html . '</div></body></html>';
 
-		$this->dom_document = new dom_document;
+		$this->dom_document = new DOMDocument;
 		$this->dom_document->loadHTML($html, LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOCDATA | LIBXML_NOENT | LIBXML_NONET);
 
 		$this->length = 0;
@@ -47,14 +47,14 @@ class sfpo_trim
 
 		$this->trimElement($this->dom_document->documentElement->firstChild);
 
-		$html = $this->dom_documnt->saveHTML($this->dom_document->documentElement->firstChild->firstChild);
+		$html = $this->dom_document->saveHTML($this->dom_document->documentElement->firstChild->firstChild);
 
 		$html = substr($html, 5, -6);
 
 		return $html;
 	}
 
-	protected function trimElement(dom_element $element): void
+	protected function trimElement(DOMElement $element): void
 	{
 		$i = 0;
 		while ($i < $element->childNodes->length)
@@ -70,7 +70,7 @@ class sfpo_trim
 			{
 				$this->trimElement($child);
 			}
-			else if ($child instanceof dom_text)
+			else if ($child instanceof DOMText)
 			{
 				$max = $this->max_length - $this->length;
 				if ($child->length > $max)
