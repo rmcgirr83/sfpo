@@ -31,11 +31,6 @@ class sfpo_trim
 	protected $max_length;
 
 	/**
-	* @var int Current length of text processed
-	*/
-	protected $dom;
-
-	/**
 	* @param  string $html Original HTML
 	* @param  int    $max  Max length of text kept
 	* @return string       Modified HTML
@@ -44,15 +39,15 @@ class sfpo_trim
 	{
 		$html = '<?xml encoding="utf-8"?><html><body><div>' . $html . '</div></body></html>';
 
-		$this->dom = new dom_document;
-		$this->dom->loadHTML($html, LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOCDATA | LIBXML_NOENT | LIBXML_NONET);
+		$this->dom_document = new dom_document;
+		$this->dom_document->loadHTML($html, LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOCDATA | LIBXML_NOENT | LIBXML_NONET);
 
 		$this->length = 0;
 		$this->max_length = $max;
 
-		$this->trimElement($this->dom->documentElement->firstChild);
+		$this->trimElement($this->dom_document->documentElement->firstChild);
 
-		$html = $this->dom->saveHTML($this->dom->documentElement->firstChild->firstChild);
+		$html = $this->dom_documnt->saveHTML($this->dom_document->documentElement->firstChild->firstChild);
 
 		$html = substr($html, 5, -6);
 
