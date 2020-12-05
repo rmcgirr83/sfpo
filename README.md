@@ -5,11 +5,6 @@ phpBB Show First Post Only to Guest extension
 
 Allows the admin to set an option that will only allow unregistered users/guests to view the first post of any topic. The rest of the posts in the topic will ask them to login or register.  Options are set by the admin on a per forum basis.
 
-#### Status Badge for Show first post only to Guest on phpBB v3.3.x :
-![Travis-CI](https://img.shields.io/badge/Travis-CI-8000FF.svg) [![Build Status](https://travis-ci.com/rmcgirr83/sfpo.svg?branch=master)](https://travis-ci.com/rmcgirr83/sfpo)
-
-![Scrutinizer-CI](https://img.shields.io/badge/Scrutinizer-CI-8000FF.svg) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rmcgirr83/sfpo/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rmcgirr83/sfpo/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/rmcgirr83/sfpo/badges/build.png?b=master)](https://scrutinizer-ci.com/g/rmcgirr83/sfpo/build-status/master)
-
 ![Shields.IO](https://img.shields.io/badge/Shields-IO-8000FF.svg?style=flat-square) [![GitHub release](https://img.shields.io/github/release/rmcgirr83/sfpo.svg?style=flat-square) ![license](https://img.shields.io/github/license/rmcgirr83/sfpo.svg?style=flat-square)](https://github.com/rmcgirr83/sfpo)
 
 ![Screenshot](viewtopic.jpg)
