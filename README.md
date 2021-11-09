@@ -1,11 +1,10 @@
-Show First Post Only to Guest
-===============
+# Show First Post Only To Guest for phpBB3
 
-phpBB Show First Post Only to Guest extension
+Allows the admin to set an option that will only allow unregistered users/guests to view the first post of any topic. The rest of the posts in the topic will ask them to login or register.  Options are set by the admin on a per forum basis. Can choose to allow or not registered Bots to view the posts.
 
-Allows the admin to set an option that will only allow unregistered users/guests to view the first post of any topic. The rest of the posts in the topic will ask them to login or register.  Options are set by the admin on a per forum basis.
+[![Build Status](https://github.com/rmcgirr83/sfpo/workflows/Tests/badge.svg)](https://github.com/rmcgirr83/sfpo/actions)
 
-![Shields.IO](https://img.shields.io/badge/Shields-IO-8000FF.svg?style=flat-square) [![GitHub release](https://img.shields.io/github/release/rmcgirr83/sfpo.svg?style=flat-square) ![license](https://img.shields.io/github/license/rmcgirr83/sfpo.svg?style=flat-square)](https://github.com/rmcgirr83/sfpo)
+[![License](https://img.shields.io/github/license/rmcgirr83/sfpo.svg?style=flat-square)](https://github.com/rmcgirr83/sfpo)
 
 ![Screenshot](viewtopic.jpg)
 
@@ -18,9 +17,6 @@ Clone (or download and move) the repository into the folder ext/rmcgirr83/sfpo:
 cd phpBB3
 git clone https://github.com/rmcgirr83/sfpo.git ext/rmcgirr83/sfpo/
 ```
-
-This extension has a dependency on another github repo.  Please make sure to run composer.phar install or the posts will not be truncated.
-
 ### 2. activate
 Go to admin panel -> tab customise -> Manage extensions -> enable Show First Post Only to Guest
 
