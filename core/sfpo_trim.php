@@ -16,17 +16,17 @@ use DOMText as dom_text;
 class sfpo_trim
 {
 	/**
-	* @var DOMDocument
+	* @var dom_document
 	*/
 	protected $dom_document;
 
 	/**
-	* @var int Current length of text processed
+	* @var length
 	*/
 	protected $length;
 
 	/**
-	* @var int Current length of text processed
+	* @var max_length
 	*/
 	protected $max_length;
 
