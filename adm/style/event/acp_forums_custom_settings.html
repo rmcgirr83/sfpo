@@ -1,0 +1,25 @@
+{% if S_SFPO_ENABLED %}
+<div id="sfpo_options">
+	<fieldset>
+		<legend>{{ lang('SFPO') }}</legend>
+		<dl>
+			<dt><label for="sfpo_guest_enable">{{ lang('ENABLE_SFPO') }}{{ lang('COLON') }}</label><br><span>{{ lang('ENABLE_SFPO_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="sfpo_guest_enable" value="1"{% if S_SFPO_GUEST_ENABLE %} id="sfpo_guest_enable" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="sfpo_guest_enable" value="0"{% if not S_SFPO_GUEST_ENABLE %} id="sfpo_guest_enable" checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="sfpo_bots_allowed">{{ lang('SFPO_BOTS_ALLOWED') }}{{ lang('COLON') }}</label><br /><span>{{ lang('SFPO_BOTS_ALLOWED_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" name="sfpo_bots_allowed" value="1"{% if S_SFPO_BOTS_ALLOWED %} id="sfpo_bots_allowed_enable" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="sfpo_bots_allowed" value="0"{% if not S_SFPO_BOTS_ALLOWED %} id="sfpo_bots__allowed_enable" checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="sfpo_characters">{{ lang('SFPO_CHARACTERS') }}{{ lang('COLON') }}</label><br /><span>{{ lang('SFPO_CHARACTERS_EXPLAIN') }}</span></dt>
+			<dd><input name="sfpo_characters" id="sfpo_characters" type="text" size="3" maxlength="3" value="{{ S_SFPO_CHARACTERS }}" /> {{ lang('SFPO_CHARS') }}</dd>
+		</dl>
+	</fieldset>
+</div>
+{% endif %}

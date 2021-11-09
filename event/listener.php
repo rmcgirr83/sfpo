@@ -24,31 +24,28 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 */
 class listener implements EventSubscriberInterface
 {
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\content_visibility */
+	/** @var content_visibility */
 	protected $content_visibility;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var driver_interface */
 	protected $db;
 
-	/** @var \phpbb\language\language */
+	/** @var language */
 	protected $language;
 
-	/** @var \phpbb\request\request */
+	/** @var request */
 	protected $request;
 
-	/** @var \phpbb\template\template */
+	/** @var template */
 	protected $template;
 
-	/** @var utils */
-	protected $utils;
-
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
-	/* @var \rmcgirr83\sfpo\core\sfpo_trim */
+	/* @var sfpo_trim */
 	protected $sfpo_trim;
 
 	/** @var string phpBB root path */
@@ -92,6 +89,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			// ACP activities
+			'core.acp_extensions_run_action_after'	=>	'acp_extensions_run_action_after',
 			'core.acp_manage_forums_request_data'		=> 'acp_manage_forums_request_data',
 			'core.acp_manage_forums_initialise_data'	=> 'acp_manage_forums_initialise_data',
 			'core.acp_manage_forums_display_form'		=> 'acp_manage_forums_display_form',
@@ -104,12 +102,27 @@ class listener implements EventSubscriberInterface
 		);
 	}
 
+	/* Display additional metadate in extension details
+	*
+	* @param $event			event object
+	* @param return null
+	* @access public
+	*/
+	public function acp_extensions_run_action_after($event)
+	{
+		if ($event['ext_name'] == 'rmcgirr83/sfpo' && $event['action'] == 'details')
+		{
+			$this->template->assign_var('S_BUY_ME_A_BEER_SFPO', true);
+		}
+	}
+
 	// Submit form (add/update)
 	public function acp_manage_forums_request_data($event)
 	{
 		$sfpo_array = $event['forum_data'];
 		$sfpo_array['sfpo_guest_enable'] = $this->request->variable('sfpo_guest_enable', 0);
 		$sfpo_array['sfpo_characters'] = $this->request->variable('sfpo_characters', 0);
+		$sfpo_array['sfpo_bots_allowed'] = $this->request->variable('sfpo_bots_allowed', 1);
 		$event['forum_data'] = $sfpo_array;
 	}
 
@@ -121,6 +134,7 @@ class listener implements EventSubscriberInterface
 			$sfpo_array = $event['forum_data'];
 			$sfpo_array['sfpo_guest_enable'] = (int) 0;
 			$sfpo_array['sfpo_characters'] = (int) 150;
+			$sfpo_array['sfpo_bots_allowed'] = (int) 1;
 			$event['forum_data'] = $sfpo_array;
 		}
 	}
@@ -129,8 +143,10 @@ class listener implements EventSubscriberInterface
 	public function acp_manage_forums_display_form($event)
 	{
 		$sfpo_array = $event['template_data'];
+		$sfpo_array['S_SFPO_ENABLED'] = true;
 		$sfpo_array['S_SFPO_GUEST_ENABLE'] = $event['forum_data']['sfpo_guest_enable'];
 		$sfpo_array['S_SFPO_CHARACTERS'] = $event['forum_data']['sfpo_characters'];
+		$sfpo_array['S_SFPO_BOTS_ALLOWED'] = $event['forum_data']['sfpo_bots_allowed'];
 		$event['template_data'] = $sfpo_array;
 	}
 
@@ -148,7 +164,7 @@ class listener implements EventSubscriberInterface
 		$start = $event['start'];
 		$total_posts = $event['total_posts'];
 
-		if ($this->s_sfpo($topic_data['sfpo_guest_enable']))
+		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']))
 		{
 			$this->language->add_lang('common', 'rmcgirr83/sfpo');
 			$topic_data['prev_posts'] = $start = 0;
@@ -178,7 +194,7 @@ class listener implements EventSubscriberInterface
 		// only show the div if post_list is greater than one
 		$post_list_count = count($post_list);
 
-		if ($this->s_sfpo($topic_data['sfpo_guest_enable']))
+		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']))
 		{
 			$post_list = array((int) $topic_data['topic_first_post_id']);
 			$sql_ary['WHERE'] = $this->db->sql_in_set('p.post_id', $post_list) . ' AND u.user_id = p.poster_id';
@@ -209,7 +225,7 @@ class listener implements EventSubscriberInterface
 		$topic_data = $event['topic_data'];
 		$post_template = $event['post_row'];
 
-		if ($this->s_sfpo($topic_data['sfpo_guest_enable']) && !empty($topic_data['sfpo_characters']))
+		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']) && !empty($topic_data['sfpo_characters']))
 		{
 			if (utf8_strlen($post_template['MESSAGE']) > $topic_data['sfpo_characters'])
 			{
@@ -282,9 +298,9 @@ class listener implements EventSubscriberInterface
 	* @return bool
 	* @access private
 	*/
-	private function s_sfpo($sfpo_guest_enable = false)
+	private function s_sfpo($sfpo_guest_enable = false, $sfpo_bots_allowed = true)
 	{
-		$s_sfpo = ($sfpo_guest_enable && ($this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot']));
+		$s_sfpo = ($sfpo_guest_enable && ($this->user->data['user_id'] == ANONYMOUS || ($this->user->data['is_bot'] && !$sfpo_bots_allowed)));
 
 		return $s_sfpo;
 	}
