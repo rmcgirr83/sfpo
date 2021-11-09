@@ -36,7 +36,7 @@ class ext extends base
 		$config = $this->container->get('config');
 
 		$language = $this->container->get('language');
-		$language->add_lang('ext_enable_error', 'rmcgirr83/' . self::EXT_NAME);
+		$language->add_lang('ext_enable_error', 'rmcgirr83/'. self::EXT_NAME);
 
 		if (!extension_loaded('mbstring'))
 		{

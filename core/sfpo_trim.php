@@ -9,52 +9,52 @@
 
 namespace rmcgirr83\sfpo\core;
 
-use DOMDocument;
-use DOMElement;
-use DOMText;
+use DOMDocument as dom_document;
+use DOMElement as dom_element;
+use DOMText as dom_text;
 
 class sfpo_trim
 {
 	/**
-	 * @var DOMDocument
-	 */
+	* @var DOMDocument
+	*/
 	protected $dom_document;
 
 	/**
-	 * @var int Current length of text processed
-	 */
+	* @var int Current length of text processed
+	*/
 	protected $length;
 
 	/**
-	 * @var int Current length of text processed
-	 */
+	* @var int Current length of text processed
+	*/
 	protected $max_length;
 
 	/**
-	 * @param  string $html Original HTML
-	 * @param  int    $max  Max length of text kept
-	 * @return string       Modified HTML
-	 */
+	* @param  string $html Original HTML
+	* @param  int    $max  Max length of text kept
+	* @return string       Modified HTML
+	*/
 	public function trimHtml(string $html, int $max): string
 	{
 		$html = '<?xml encoding="utf-8"?><html><body><div>' . $html . '</div></body></html>';
 
-		$this->dom_document = new DOMDocument;
-		$this->dom_document->loadHTML($html, LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOCDATA | LIBXML_NOENT | LIBXML_NONET);
+		$this->dom = new dom_document;
+		$this->dom->loadHTML($html, LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOCDATA | LIBXML_NOENT | LIBXML_NONET);
 
 		$this->length = 0;
 		$this->max_length = $max;
 
-		$this->trimElement($this->dom_document->documentElement->firstChild);
+		$this->trimElement($this->dom->documentElement->firstChild);
 
-		$html = $this->dom_document->saveHTML($this->dom_document->documentElement->firstChild->firstChild);
+		$html = $this->dom->saveHTML($this->dom->documentElement->firstChild->firstChild);
 
 		$html = substr($html, 5, -6);
 
 		return $html;
 	}
 
-	protected function trimElement(DOMElement $element): void
+	protected function trimElement(dom_element $element): void
 	{
 		$i = 0;
 		while ($i < $element->childNodes->length)
@@ -66,11 +66,11 @@ class sfpo_trim
 				--$i;
 				$element->removeChild($child);
 			}
-			else if ($child instanceof DOMElement)
+			else if ($child instanceof dom_element)
 			{
 				$this->trimElement($child);
 			}
-			else if ($child instanceof DOMText)
+			else if ($child instanceof dom_text)
 			{
 				$max = $this->max_length - $this->length;
 				if ($child->length > $max)
