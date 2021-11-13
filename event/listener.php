@@ -254,7 +254,7 @@ class listener implements EventSubscriberInterface
 	{
 		// we only care about guests..could add bots by adding
 		// || $this->user->data['is_bot'] but don't think bots even search
-		if (!$this->user->data['is_registered'])
+		if (empty($this->user->data['is_registered']))
 		{
 			$ex_fid_array = $event['ex_fid_ary'];
 			$forum_ids = $this->get_sfpo_forums();
