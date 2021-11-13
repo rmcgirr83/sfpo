@@ -266,7 +266,7 @@ class listener implements EventSubscriberInterface
 	public function search_get_posts_data($event)
 	{
 		$sql_array = $event['sql_array'];
-		
+
 		$sql_array['SELECT'] .= ', f.sfpo_guest_enable, f.sfpo_characters, f.sfpo_bots_allowed';
 
 		$event['sql_array'] = $sql_array;
