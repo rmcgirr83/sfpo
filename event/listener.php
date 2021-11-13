@@ -88,6 +88,7 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'core.user_setup_after'						=> 'user_setup_after',
 			// ACP activities
 			'core.acp_extensions_run_action_after'	=>	'acp_extensions_run_action_after',
 			'core.acp_manage_forums_request_data'		=> 'acp_manage_forums_request_data',
@@ -98,11 +99,24 @@ class listener implements EventSubscriberInterface
 			'core.viewtopic_get_post_data'			=> 'viewtopic_get_post_data',
 			'core.viewtopic_modify_post_row'		=> 'viewtopic_modify_post_row',
 			// searching
-			'core.search_modify_param_before'		=> 'search_modify_param_before',
+			'core.search_get_posts_data'			=> 'search_get_posts_data',
+			'core.search_modify_tpl_ary'			=> 'search_modify_tpl_ary',
 		);
 	}
 
-	/* Display additional metadate in extension details
+	/**
+	 * Add user lang stuff needed
+	 *
+	 * @param object $event The event object
+	 * @return null
+	 * @access public
+	 */
+	public function user_setup_after($event)
+	{
+		$this->language->add_lang('common', 'rmcgirr83/sfpo');
+	}
+
+	/* Display additional metadata in extension details
 	*
 	* @param $event			event object
 	* @param return null
@@ -166,7 +180,6 @@ class listener implements EventSubscriberInterface
 
 		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']))
 		{
-			$this->language->add_lang('common', 'rmcgirr83/sfpo');
 			$topic_data['prev_posts'] = $start = 0;
 			$total_posts = 1;
 			$post_id = $topic_data['topic_first_post_id'];
@@ -244,22 +257,53 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	* Searching do not allow searching of forums that have the extension enabled
+	* Modify the sql search
 	*
 	* @param object $event The event object
 	* @return null
 	* @access public
 	*/
-	public function search_modify_param_before($event)
+	public function search_get_posts_data($event)
 	{
+		$sql_array = $event['sql_array'];
+		
+		$sql_array['SELECT'] .= ', f.sfpo_guest_enable, f.sfpo_characters, f.sfpo_bots_allowed';
+
+		$event['sql_array'] = $sql_array;
+	}
+	/**
+	* Searching trim the message
+	*
+	* @param object $event The event object
+	* @return null
+	* @access public
+	*/
+	public function search_modify_tpl_ary($event)
+	{
+		$sfpo_forum_ids = $this->get_sfpo_forums();
+		$forum_id = (int) $event['row']['forum_id'];
+		$tpl_array = $event['tpl_ary'];
+		$row = $event['row'];
+
 		// we only care about guests..could add bots by adding
 		// || $this->user->data['is_bot'] but don't think bots even search
-		if (empty($this->user->data['is_registered']))
+		if (empty($this->user->data['is_registered']) && in_array($forum_id, $sfpo_forum_ids))
 		{
-			$ex_fid_array = $event['ex_fid_ary'];
-			$forum_ids = $this->get_sfpo_forums();
-			$ex_fid_array = array_unique(array_merge($ex_fid_array, $forum_ids));
-			$event['ex_fid_ary'] = $ex_fid_array;
+			if ($this->s_sfpo($row['sfpo_guest_enable'], $row['sfpo_bots_allowed']) && !empty($row['sfpo_characters']))
+			{
+				if (utf8_strlen($tpl_array['MESSAGE']) > $row['sfpo_characters'])
+				{
+					$message = $this->sfpo_trim->trimHtml($tpl_array['MESSAGE'], $row['sfpo_characters']);
+
+					$link = append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login');
+
+					$message .= $this->language->lang('ELLIPSIS') . $this->language->lang('SFPO_APPEND_MESSAGE', '<a href="' . $link . '">', '</a>');
+
+					$tpl_array['MESSAGE'] = $message;
+				}
+			}
+
+			$event['tpl_ary'] = $tpl_array;
 		}
 	}
 
