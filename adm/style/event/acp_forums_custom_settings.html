@@ -20,6 +20,10 @@
 			<dt><label for="sfpo_characters">{{ lang('SFPO_CHARACTERS') }}{{ lang('COLON') }}</label><br /><span>{{ lang('SFPO_CHARACTERS_EXPLAIN') }}</span></dt>
 			<dd><input name="sfpo_characters" id="sfpo_characters" type="text" size="3" maxlength="3" value="{{ S_SFPO_CHARACTERS }}" /> {{ lang('SFPO_CHARS') }}</dd>
 		</dl>
+		<dl>
+			<dt><label>{{ lang('BUY_ME_A_BEER_SHORT') }}{{ lang('COLON') }}</label><br /><span>{{ lang('BUY_ME_A_BEER_EXPLAIN') }}</span></dt>
+			<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" border="0" alt="{{ lang('PAYPAL_ALT') }}" style="cursor:pointer;margin-top:15px;"></a></dd>
+		</dl>		
 	</fieldset>
 </div>
 {% endif %}

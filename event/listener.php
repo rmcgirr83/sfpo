@@ -11,7 +11,7 @@ namespace rmcgirr83\sfpo\event;
 
 use phpbb\config\config;
 use phpbb\content_visibility;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\driver\driver_interface as db;
 use phpbb\language\language;
 use phpbb\request\request;
 use phpbb\template\template;
@@ -30,7 +30,7 @@ class listener implements EventSubscriberInterface
 	/** @var content_visibility */
 	protected $content_visibility;
 
-	/** @var driver_interface */
+	/** @var db */
 	protected $db;
 
 	/** @var language */
@@ -57,7 +57,7 @@ class listener implements EventSubscriberInterface
 	public function __construct(
 		config $config,
 		content_visibility $content_visibility,
-		driver_interface $db,
+		db $db,
 		language $language,
 		request $request,
 		template $template,
@@ -136,7 +136,7 @@ class listener implements EventSubscriberInterface
 		$sfpo_array = $event['forum_data'];
 		$sfpo_array['sfpo_guest_enable'] = $this->request->variable('sfpo_guest_enable', 0);
 		$sfpo_array['sfpo_characters'] = $this->request->variable('sfpo_characters', 0);
-		$sfpo_array['sfpo_bots_allowed'] = $this->request->variable('sfpo_bots_allowed', 1);
+		$sfpo_array['sfpo_bots_allowed'] = $this->request->variable('sfpo_bots_allowed', 0);
 		$event['forum_data'] = $sfpo_array;
 	}
 
@@ -216,7 +216,7 @@ class listener implements EventSubscriberInterface
 			$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
 
 			$this->template->assign_vars(array(
-				'S_SFPO'	=> ($post_list_count <= 1) ? false : true,
+				'S_SFPO'	=> ($post_list_count > 1) ? true : false,
 				'SFPO_MESSAGE'		=> $topic_replies ? $this->language->lang('SFPO_MSG_REPLY', $topic_replies) : '',
 				'U_SFPO_LOGIN'		=> append_sid("{$this->root_path}ucp.$this->php_ext", 'mode=login' . $redirect),
 			));
@@ -271,6 +271,7 @@ class listener implements EventSubscriberInterface
 
 		$event['sql_array'] = $sql_array;
 	}
+
 	/**
 	* Searching trim the message
 	*
@@ -281,13 +282,12 @@ class listener implements EventSubscriberInterface
 	public function search_modify_tpl_ary($event)
 	{
 		$sfpo_forum_ids = $this->get_sfpo_forums();
-		$forum_id = (int) $event['row']['forum_id'];
 		$tpl_array = $event['tpl_ary'];
 		$row = $event['row'];
 
 		// we only care about guests..could add bots by adding
 		// || $this->user->data['is_bot'] but don't think bots even search
-		if (empty($this->user->data['is_registered']) && in_array($forum_id, $sfpo_forum_ids))
+		if (empty($this->user->data['is_registered']) && in_array((int) $row['forum_id'], $sfpo_forum_ids))
 		{
 			if ($this->s_sfpo($row['sfpo_guest_enable'], $row['sfpo_bots_allowed']) && !empty($row['sfpo_characters']))
 			{
@@ -320,7 +320,7 @@ class listener implements EventSubscriberInterface
 
 		$sql = 'SELECT forum_id
 			FROM ' . FORUMS_TABLE . '
-			WHERE sfpo_guest_enable = ' . true;
+			WHERE sfpo_guest_enable = 1';
 		$result = $this->db->sql_query($sql);
 		$forums = $this->db->sql_fetchrowset($result);
 		$this->db->sql_freeresult($result);

@@ -20,7 +20,7 @@ class ext extends base
 	const EXT_NAME = 'sfpo';
 
 	/** @var phpBB check version */
-	const PHPBB_VERSION = '3.2.0';
+	const PHPBB_VERSION = '3.3.0';
 
 	/** @var PHP check version */
 	const PHP_VERSION = '7.1';
