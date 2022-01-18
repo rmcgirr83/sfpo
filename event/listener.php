@@ -344,7 +344,7 @@ class listener implements EventSubscriberInterface
 	*/
 	private function s_sfpo($sfpo_guest_enable = false, $sfpo_bots_allowed = true)
 	{
-		$s_sfpo = ($sfpo_guest_enable && ($this->user->data['user_id'] == ANONYMOUS || ($this->user->data['is_bot'] && !$sfpo_bots_allowed)));
+		$s_sfpo = ($sfpo_guest_enable && ($this->user->data['user_id'] == ANONYMOUS || (!empty($this->user->data['is_bot']) && !$sfpo_bots_allowed)));
 
 		return $s_sfpo;
 	}
