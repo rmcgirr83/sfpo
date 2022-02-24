@@ -287,7 +287,7 @@ class listener implements EventSubscriberInterface
 
 		// we only care about guests..could add bots by adding
 		// || $this->user->data['is_bot'] but don't think bots even search
-		if (empty($this->user->data['is_registered']) && in_array((int) $row['forum_id'], $sfpo_forum_ids))
+		if (empty($this->user->data['is_registered']) && in_array((int) $row['forum_id'], $sfpo_forum_ids) && $event['show_results'] == 'posts')
 		{
 			if ($this->s_sfpo($row['sfpo_guest_enable'], $row['sfpo_bots_allowed']) && !empty($row['sfpo_characters']))
 			{
