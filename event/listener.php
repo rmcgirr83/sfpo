@@ -189,7 +189,7 @@ class listener implements EventSubscriberInterface
 		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']))
 		{
 			$topic_data['prev_posts'] = $start = 0;
-			$total_posts = ($total_posts <= $this->maxposts) ? $total_posts : $this->maxposts;;
+			$total_posts = ($total_posts <= $this->maxposts) ? $total_posts : $this->maxposts;
 			$post_id = $topic_data['topic_first_post_id'];
 		}
 
