@@ -35,8 +35,8 @@ if (empty($lang) || !is_array($lang))
 //Show First Post Only
 $lang = array_merge($lang, [
 	'SFPO_MSG_REPLY'        => array(
-		1 => 'This topic has <strong>1</strong> reply',
-		2 => 'This topic has <strong>%d</strong> replies',
+		1 => 'This topic has <strong>1</strong> more reply',
+		2 => 'This topic has <strong>%d</strong> more replies',
 	),
 	'SFPO_MSG_REGISTER'        => 'You must be a registered member and logged in to view the replies in this topic.',
 	'SFPO_APPEND_MESSAGE' => '<em>%slogin%s</em> to view the rest of this post',
