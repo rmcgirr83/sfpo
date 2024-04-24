@@ -54,6 +54,9 @@ class listener implements EventSubscriberInterface
 	/** @var string phpEx */
 	protected $php_ext;
 
+	/** @var int maxposts guests see */
+	protected $maxposts;
+
 	public function __construct(
 		config $config,
 		content_visibility $content_visibility,
@@ -76,6 +79,7 @@ class listener implements EventSubscriberInterface
 		$this->sfpo_trim = $sfpo_trim;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
+		$this->maxposts = (int) 1;
 	}
 
 	/**
@@ -135,6 +139,7 @@ class listener implements EventSubscriberInterface
 	{
 		$sfpo_array = $event['forum_data'];
 		$sfpo_array['sfpo_guest_enable'] = $this->request->variable('sfpo_guest_enable', 0);
+		$sfpo_array['sfpo_posts_to_show'] = $this->request->variable('sfpo_posts_to_show', 0);
 		$sfpo_array['sfpo_characters'] = $this->request->variable('sfpo_characters', 0);
 		$sfpo_array['sfpo_bots_allowed'] = $this->request->variable('sfpo_bots_allowed', 0);
 		$event['forum_data'] = $sfpo_array;
@@ -147,6 +152,7 @@ class listener implements EventSubscriberInterface
 		{
 			$sfpo_array = $event['forum_data'];
 			$sfpo_array['sfpo_guest_enable'] = (int) 0;
+			$sfpo_array['sfpo_posts_to_show'] = (int) 1;
 			$sfpo_array['sfpo_characters'] = (int) 150;
 			$sfpo_array['sfpo_bots_allowed'] = (int) 1;
 			$event['forum_data'] = $sfpo_array;
@@ -159,6 +165,7 @@ class listener implements EventSubscriberInterface
 		$sfpo_array = $event['template_data'];
 		$sfpo_array['S_SFPO_ENABLED'] = true;
 		$sfpo_array['S_SFPO_GUEST_ENABLE'] = $event['forum_data']['sfpo_guest_enable'];
+		$sfpo_array['S_SFPO_POSTS_TO_SHOW'] = $event['forum_data']['sfpo_posts_to_show'];
 		$sfpo_array['S_SFPO_CHARACTERS'] = $event['forum_data']['sfpo_characters'];
 		$sfpo_array['S_SFPO_BOTS_ALLOWED'] = $event['forum_data']['sfpo_bots_allowed'];
 		$event['template_data'] = $sfpo_array;
@@ -177,11 +184,12 @@ class listener implements EventSubscriberInterface
 		$post_id = $event['post_id'];
 		$start = $event['start'];
 		$total_posts = $event['total_posts'];
+		$this->maxposts = $this->s_sfpo($topic_data['sfpo_posts_to_show']);
 
 		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']))
 		{
 			$topic_data['prev_posts'] = $start = 0;
-			$total_posts = 1;
+			$total_posts = ($total_posts <= $this->maxposts) ? $total_posts : $this->maxposts;;
 			$post_id = $topic_data['topic_first_post_id'];
 		}
 
@@ -212,7 +220,7 @@ class listener implements EventSubscriberInterface
 			$post_list = array((int) $topic_data['topic_first_post_id']);
 			$sql_ary['WHERE'] = $this->db->sql_in_set('p.post_id', $post_list) . ' AND u.user_id = p.poster_id';
 
-			$topic_replies = $this->content_visibility->get_count('topic_posts', $topic_data, $event['forum_id']) - 1;
+			$topic_replies = $this->content_visibility->get_count('topic_posts', $topic_data, $event['forum_id']) - $this->maxposts;
 			$redirect = '&amp;redirect=' . urlencode(str_replace('&amp;', '&', build_url(array('_f_'))));
 
 			$this->template->assign_vars(array(
