@@ -245,7 +245,7 @@ class listener implements EventSubscriberInterface
 	{
 		$topic_data = $event['topic_data'];
 		$post_template = $event['post_row'];
-		$current_row_number = $event['current_row_number'] + 1; 
+		$current_row_number = $event['current_row_number'] + 1;
 
 		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']) && !empty($topic_data['sfpo_characters']) && $current_row_number >= $this->maxposts)
 		{
