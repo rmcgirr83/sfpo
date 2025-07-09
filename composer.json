@@ -2,8 +2,8 @@
     "name": "rmcgirr83/sfpo",
     "type": "phpbb-extension",
     "description": "Allows the admin to set an option that will only allow unregistered users/guests to view the first post of any topic. The rest of the posts in the topic will ask them to login or register.",
-    "version": "1.3.3",
-    "time": "2022-02-24",
+    "version": "1.4.0",
+    "time": "2025-07-08",
     "keywords": [
         "phpbb",
         "extension",
@@ -19,7 +19,7 @@
         }
     ],
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.4",
         "phpbb/phpbb": ">=3.3.0",
         "composer/installers": "~1.0.0"
     },

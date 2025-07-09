@@ -184,7 +184,7 @@ class listener implements EventSubscriberInterface
 		$post_id = $event['post_id'];
 		$start = $event['start'];
 		$total_posts = $event['total_posts'];
-		$this->maxposts = $this->s_sfpo($topic_data['sfpo_posts_to_show']);
+		$this->maxposts = (int) $topic_data['sfpo_posts_to_show'];
 
 		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']))
 		{
@@ -215,9 +215,9 @@ class listener implements EventSubscriberInterface
 		// only show the div if post_list is greater than one
 		$post_list_count = count($post_list);
 
-		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']))
+		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']) && $this->maxposts <= $post_list_count)
 		{
-			$post_list = array((int) $topic_data['topic_first_post_id']);
+			$post_list = array_slice($post_list, 0, $this->maxposts);
 			$sql_ary['WHERE'] = $this->db->sql_in_set('p.post_id', $post_list) . ' AND u.user_id = p.poster_id';
 
 			$topic_replies = $this->content_visibility->get_count('topic_posts', $topic_data, $event['forum_id']) - $this->maxposts;
@@ -245,8 +245,9 @@ class listener implements EventSubscriberInterface
 	{
 		$topic_data = $event['topic_data'];
 		$post_template = $event['post_row'];
+		$current_row_number = $event['current_row_number'] + 1; 
 
-		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']) && !empty($topic_data['sfpo_characters']))
+		if ($this->s_sfpo($topic_data['sfpo_guest_enable'], $topic_data['sfpo_bots_allowed']) && !empty($topic_data['sfpo_characters']) && $current_row_number >= $this->maxposts)
 		{
 			if (utf8_strlen($post_template['MESSAGE']) > $topic_data['sfpo_characters'])
 			{

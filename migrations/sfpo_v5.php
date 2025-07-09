@@ -21,7 +21,7 @@ class sfpo_v5 extends \phpbb\db\migration\migration
 		return [
 			'add_columns'	=> [
 				$this->table_prefix . 'forums'	=> [
-					'sfpo_posts_to_show'	=> ['BOOL', 1],
+					'sfpo_posts_to_show'	=> ['UINT', 1],
 				],
 			],
 		];

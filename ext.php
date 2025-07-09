@@ -23,7 +23,7 @@ class ext extends base
 	const PHPBB_VERSION = '3.3.0';
 
 	/** @var PHP check version */
-	const PHP_VERSION = '7.1';
+	const PHP_VERSION = '7.4';
 
 	/**
 	 * Enable extension if phpBB and mbstring version requirement is met
@@ -37,11 +37,6 @@ class ext extends base
 
 		$language = $this->container->get('language');
 		$language->add_lang('ext_enable_error', 'rmcgirr83/'. self::EXT_NAME);
-
-		if (!extension_loaded('mbstring'))
-		{
-			trigger_error($language->lang('EXT_MBSTRING_ERROR'), E_USER_WARNING);
-		}
 
 		if (!(phpbb_version_compare($config['version'], self::PHPBB_VERSION, '>=')))
 		{

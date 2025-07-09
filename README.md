@@ -1,6 +1,6 @@
 # Show First Post Only To Guest for phpBB3
 
-Allows the admin to set an option that will only allow unregistered users/guests to view the first post of any topic. The rest of the posts in the topic will ask them to login or register.  Options are set by the admin on a per forum basis. Can choose to allow or not registered Bots to view the posts.
+Allows the admin to set an option that will only allow unregistered users/guests to view the first post of any topic. The rest of the posts in the topic will ask them to login or register.  Options are set by the admin on a per forum basis. Can choose to allow or not registered Bots to view the posts and can also choose how many posts to show.
 
 [![Build Status](https://github.com/rmcgirr83/sfpo/workflows/Tests/badge.svg)](https://github.com/rmcgirr83/sfpo/actions)
 
