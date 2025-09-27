@@ -162,13 +162,18 @@ class listener implements EventSubscriberInterface
 	// ACP forums template output
 	public function acp_manage_forums_display_form($event)
 	{
-		$sfpo_array = $event['template_data'];
-		$sfpo_array['S_SFPO_ENABLED'] = true;
-		$sfpo_array['S_SFPO_GUEST_ENABLE'] = $event['forum_data']['sfpo_guest_enable'];
-		$sfpo_array['S_SFPO_POSTS_TO_SHOW'] = $event['forum_data']['sfpo_posts_to_show'];
-		$sfpo_array['S_SFPO_CHARACTERS'] = $event['forum_data']['sfpo_characters'];
-		$sfpo_array['S_SFPO_BOTS_ALLOWED'] = $event['forum_data']['sfpo_bots_allowed'];
-		$event['template_data'] = $sfpo_array;
+		$forum_type = $event['forum_data']['forum_type'];
+		
+		if ($forum_type == FORUM_POST)
+		{
+			$sfpo_array = $event['template_data'];
+			$sfpo_array['S_SFPO_ENABLED'] = true;
+			$sfpo_array['S_SFPO_GUEST_ENABLE'] = $event['forum_data']['sfpo_guest_enable'];
+			$sfpo_array['S_SFPO_POSTS_TO_SHOW'] = $event['forum_data']['sfpo_posts_to_show'];
+			$sfpo_array['S_SFPO_CHARACTERS'] = $event['forum_data']['sfpo_characters'];
+			$sfpo_array['S_SFPO_BOTS_ALLOWED'] = $event['forum_data']['sfpo_bots_allowed'];
+			$event['template_data'] = $sfpo_array;
+		}
 	}
 
 	/**

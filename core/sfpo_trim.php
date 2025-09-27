@@ -15,15 +15,11 @@ use DOMText as dom_text;
 
 class sfpo_trim
 {
-	/**
-	* @var dom_document
-	*/
-	protected $dom_document;
 
 	/**
 	* @var length
 	*/
-	protected $length;
+	protected $length = 0;
 
 	/**
 	* @var max_length
@@ -39,15 +35,15 @@ class sfpo_trim
 	{
 		$html = '<?xml encoding="utf-8"?><html><body><div>' . $html . '</div></body></html>';
 
-		$this->dom = new dom_document;
-		$this->dom->loadHTML($html, LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOCDATA | LIBXML_NOENT | LIBXML_NONET);
+		$dom = new dom_document();
+		//we use LIBXML_NOERROR here to suppress malformed html errors
+		$dom->loadHTML($html, LIBXML_NOERROR | LIBXML_COMPACT | LIBXML_HTML_NODEFDTD | LIBXML_NOCDATA | LIBXML_NOENT | LIBXML_NONET);
 
-		$this->length = 0;
 		$this->max_length = $max;
 
-		$this->trimElement($this->dom->documentElement->firstChild);
+		$this->trimElement($dom->documentElement->firstChild);
 
-		$html = $this->dom->saveHTML($this->dom->documentElement->firstChild->firstChild);
+		$html = $dom->saveHTML($dom->documentElement->firstChild->firstChild);
 
 		$html = substr($html, 5, -6);
 

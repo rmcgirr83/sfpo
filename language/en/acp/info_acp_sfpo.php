@@ -21,7 +21,7 @@ $lang = array_merge($lang, [
 	// ACP
 	'SFPO'				=> 'Show First Post Only To Guest',
 	'ENABLE_SFPO' 			=> 'Enable show first post only to guest',
-	'ENABLE_SFPO_EXPLAIN' 		=> 'If set to yes unregistered users / guests are able to view only the first post of any topic. The rest of the posts in the topic will ask them to login or register.',
+	'ENABLE_SFPO_EXPLAIN' 		=> 'If set to yes unregistered users / guests are able to view only the number of posts set below. The rest of the posts in the topic will ask them to login or register.',
 	'SFPO_CHARACTERS'		=> 'Number of characters to display',
 	'SFPO_CHARACTERS_EXPLAIN'	=> 'Enter the number of characters to display for the first topic (default is 150). Setting the value to 0 disables this feature.',
 	'SFPO_CHARS'			=> 'Characters',

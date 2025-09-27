@@ -3,30 +3,30 @@
 	<fieldset>
 		<legend>{{ lang('SFPO') }}</legend>
 		<dl>
-			<dt><label for="sfpo_guest_enable">{{ lang('ENABLE_SFPO') }}{{ lang('COLON') }}</label><br><span>{{ lang('ENABLE_SFPO_EXPLAIN') }}</span></dt>
+			<dt><label for="sfpo_guest_enable">{{ lang('ENABLE_SFPO') ~ lang('COLON') }}</label><br><span>{{ lang('ENABLE_SFPO_EXPLAIN') }}</span></dt>
 			<dd>
 				<label><input type="radio" class="radio" name="sfpo_guest_enable" value="1"{% if S_SFPO_GUEST_ENABLE %} id="sfpo_guest_enable" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 				<label><input type="radio" class="radio" name="sfpo_guest_enable" value="0"{% if not S_SFPO_GUEST_ENABLE %} id="sfpo_guest_enable" checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="sfpo_bots_allowed">{{ lang('SFPO_BOTS_ALLOWED') }}{{ lang('COLON') }}</label><br /><span>{{ lang('SFPO_BOTS_ALLOWED_EXPLAIN') }}</span></dt>
+			<dt><label for="sfpo_posts_to_show">{{ lang('SFPO_POSTS_TO_SHOW') ~ lang('COLON') }}</label><br><span>{{ lang('SFPO_POSTS_TO_SHOW_EXPLAIN') }}</span></dt>
+			<dd><input name="sfpo_posts_to_show" id="sfpo_posts_to_show" type="number" size="3" min="1" max="99" maxlength="3" value="{{ S_SFPO_POSTS_TO_SHOW }}" /> {{ lang('SFPO_POSTS') }}</dd>
+		</dl>		
+		<dl>
+			<dt><label for="sfpo_bots_allowed">{{ lang('SFPO_BOTS_ALLOWED') ~ lang('COLON') }}</label><br /><span>{{ lang('SFPO_BOTS_ALLOWED_EXPLAIN') }}</span></dt>
 			<dd>
 				<label><input type="radio" class="radio" name="sfpo_bots_allowed" value="1"{% if S_SFPO_BOTS_ALLOWED %} id="sfpo_bots_allowed_enable" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 				<label><input type="radio" class="radio" name="sfpo_bots_allowed" value="0"{% if not S_SFPO_BOTS_ALLOWED %} id="sfpo_bots__allowed_enable" checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="sfpo_posts_to_show">{{ lang('SFPO_POSTS_TO_SHOW') }}{{ lang('COLON') }}</label><br><span>{{ lang('SFPO_POSTS_TO_SHOW_EXPLAIN') }}</span></dt>
-			<dd><input name="sfpo_posts_to_show" id="sfpo_posts_to_show" type="number" size="3" min="1" max="99" maxlength="3" value="{{ S_SFPO_POSTS_TO_SHOW }}" /> {{ lang('SFPO_POSTS') }}</dd>
-		</dl>
-		<dl>
-			<dt><label for="sfpo_characters">{{ lang('SFPO_CHARACTERS') }}{{ lang('COLON') }}</label><br /><span>{{ lang('SFPO_CHARACTERS_EXPLAIN') }}</span></dt>
+			<dt><label for="sfpo_characters">{{ lang('SFPO_CHARACTERS') ~ lang('COLON') }}</label><br /><span>{{ lang('SFPO_CHARACTERS_EXPLAIN') }}</span></dt>
 			<dd><input name="sfpo_characters" id="sfpo_characters" type="number" size="3" maxlength="3" value="{{ S_SFPO_CHARACTERS }}" /> {{ lang('SFPO_CHARS') }}</dd>
 		</dl>
 		<dl>
-			<dt><label>{{ lang('BUY_ME_A_BEER_SHORT') }}{{ lang('COLON') }}</label><br /><span>{{ lang('BUY_ME_A_BEER_EXPLAIN') }}</span></dt>
-			<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" border="0" alt="{{ lang('PAYPAL_ALT') }}" style="cursor:pointer;margin-top:15px;"></a></dd>
+			<dt><label>{{ lang('BUY_ME_A_BEER_SHORT') ~ lang('COLON') }}</label><br /><span>{{ lang('BUY_ME_A_BEER_EXPLAIN') }}</span></dt>
+			<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" alt="{{ lang('PAYPAL_ALT') }}" style="margin-top:15px;"></a></dd>
 		</dl>		
 	</fieldset>
 </div>
