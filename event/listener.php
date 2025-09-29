@@ -163,7 +163,7 @@ class listener implements EventSubscriberInterface
 	public function acp_manage_forums_display_form($event)
 	{
 		$forum_type = $event['forum_data']['forum_type'];
-		
+
 		if ($forum_type == FORUM_POST)
 		{
 			$sfpo_array = $event['template_data'];
